@@ -1,0 +1,48 @@
+{
+ "contract": "CONTRATO-004",
+ "lambda_m": 0.00075,
+ "distance_m": 0.018,
+ "T2": {
+  "grids": {
+   "coarse_N": 128,
+   "padded_N": 256,
+   "dx_m": 0.0004
+  },
+  "validity_limits_m": {
+   "N128": 0.027306666666666667,
+   "N256": 0.05461333333333333
+  },
+  "rel_l2_intensity": 0.04413928062884611,
+  "threshold": 0.02,
+  "verdict": "fail"
+ },
+ "T3": {
+  "coarse": {
+   "dx_m": 0.0004,
+   "N": 256,
+   "validity_limit_m": 0.05461333333333333
+  },
+  "fine": {
+   "dx_m": 0.0002,
+   "N": 512,
+   "validity_limit_m": 0.027306666666666667
+  },
+  "window_m": 0.1024,
+  "rel_l2_intensity": 3.0418138792951206,
+  "threshold": 0.05,
+  "verdict": "fail",
+  "exploratory_rel_l2_energy_sum": 0.02846510302566392,
+  "exploratory_note": "post hoc; not the pre-registered verdict"
+ },
+ "T1": {
+  "k_range": [
+   0,
+   63
+  ],
+  "max_rel_error": 3.740789579741022e-14,
+  "argmax_k": 55,
+  "max_sin_theta": 0.9228515625,
+  "threshold": 1e-10,
+  "verdict": "pass"
+ }
+}
