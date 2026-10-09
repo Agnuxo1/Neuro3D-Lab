@@ -34,6 +34,7 @@ imagen de intensidad  ◀──import───────  detector_intensity.n
 {
   "schema": "optlab.bench/1",
   "wavelength_m": 6.33e-7,
+  "medium_index": 1.0,
   "grid": {"n": 64, "pixel_m": 8e-6},
   "source": {"z_m": 0.0},
   "layers": [
@@ -49,6 +50,7 @@ imagen de intensidad  ◀──import───────  detector_intensity.n
 Reglas:
 
 - Las `z_m` deben crecer estrictamente: fuente < capas < detector.
+- `medium_index` (opcional, por defecto 1,0): índice del medio entre planos. La propagación usa la longitud de onda `λ/medium_index`. Todos los `n_medium` de las capas deben coincidir con él; si no, `ValueError`.
 - Distancia entre planos = diferencia de `z_m`.
 - Altura real = `height_npy · height_max_m`, con forma `(n, n)`.
 - Rutas relativas al directorio del JSON.

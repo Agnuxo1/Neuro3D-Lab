@@ -128,8 +128,8 @@ _CLASSES = (OPTLAB_OT_build_demo_bench, OPTLAB_OT_export_bench,
 
 _PROPS = {
     "optlab_grid_n": IntProperty(name="Grid N", default=64, min=8, max=4096),
-    "optlab_pixel_m": FloatProperty(name="Pixel (m)", default=8e-6, precision=9),
-    "optlab_wavelength_m": FloatProperty(name="Wavelength (m)", default=6.33e-7, precision=9),
+    "optlab_pixel_m": FloatProperty(name="Pixel (m)", default=8e-6, min=1e-9, precision=9),
+    "optlab_wavelength_m": FloatProperty(name="Wavelength (m)", default=6.33e-7, min=1e-9, precision=9),
     "optlab_output_dir": StringProperty(name="Output dir", default=DEFAULT_OUT, subtype="DIR_PATH"),
     "optlab_intensity_path": StringProperty(name="Intensity .npy", default="", subtype="FILE_PATH"),
     "optlab_src_path": StringProperty(name="optlab src path",
