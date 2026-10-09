@@ -28,6 +28,18 @@ El banco funciona en tres pasos: Blender exporta la geometría y las alturas de 
 
 ---
 
+## El banco en Blender
+
+La intensidad que calcula `optlab` se carga en el detector de la escena de Blender y se renderiza con Cycles en CPU.
+
+<p align="center">
+  <img src="docs/img/blender_bench.gif" alt="Banco óptico renderizado en Blender: fuente, dos capas de fase y detector con la intensidad calculada" width="90%">
+</p>
+
+> Blender solo visualiza. El cálculo físico lo hace `optlab`. Para que se vean, los planos están ampliados 60 veces en x e y; la escala es visual, no física.
+
+---
+
 ## Física implementada
 
 ### Propagación por espectro angular
