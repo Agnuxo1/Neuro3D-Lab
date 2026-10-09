@@ -18,12 +18,35 @@ from mathutils import Vector
 SCHEMA = "optlab.bench/1"
 SCALE_PROP = "optlab_intensity_scale"
 HEIGHT_IMG_PROP = "optlab_height_image"
+EPS_BU = 1e-4
 
 
 def _scale(scene=None):
     scene = scene or bpy.context.scene
     s = scene.unit_settings.scale_length
     return s if s > 0 else 1.0
+
+
+def _clean(v):
+    """Round to 6 significant digits to drop float32 noise (6.330000132e-7 -> 6.33e-7)."""
+    return float(f"{float(v):.6g}")
+
+
+def _z_world(obj):
+    """World-space z of an object (honours parents), in Blender units."""
+    return float(obj.matrix_world.translation.z)
+
+
+def clear_bench():
+    """Remove every object created by a previous build (idempotent 'Build')."""
+    for obj in [o for o in bpy.data.objects if "optlab_role" in o.keys()]:
+        mesh = obj.data
+        bpy.data.objects.remove(obj, do_unlink=True)
+        if mesh is not None and mesh.users == 0:
+            bpy.data.meshes.remove(mesh)
+    for img in [i for i in bpy.data.images
+                if i.name.startswith("LAYER_") and i.name.endswith("_height")]:
+        bpy.data.images.remove(img)
 
 
 def _make_plane(name, size_bu, z_bu):
@@ -76,6 +99,7 @@ def _image_to_array(img):
 def build_demo_bench(n=64, pixel_m=8e-6, wavelength_m=6.33e-7,
                      layer_z_list=(0.02, 0.04), detector_z_m=0.06, seed=0):
     """Create SOURCE, LAYER_k and DETECTOR planes in the current scene."""
+    clear_bench()
     scene = bpy.context.scene
     sc = _scale(scene)
     size_bu = n * pixel_m / sc
@@ -101,6 +125,7 @@ def build_demo_bench(n=64, pixel_m=8e-6, wavelength_m=6.33e-7,
         img = bpy.data.images.new(name, n, n, float_buffer=True, alpha=False)
         img.colorspace_settings.name = "Non-Color"
         _set_image_from_array(img, _smooth_pattern(n, rng))
+        img.pack()  # embed pixels so they survive save/reopen of the .blend
         obj[HEIGHT_IMG_PROP] = img
 
     det = _make_plane("DETECTOR", size_bu, detector_z_m / sc)
@@ -118,8 +143,9 @@ def build_demo_bench(n=64, pixel_m=8e-6, wavelength_m=6.33e-7,
 
 
 def _by_role(role):
+    bpy.context.view_layer.update()  # make matrix_world current
     objs = [o for o in bpy.context.scene.objects if o.get("optlab_role") == role]
-    return sorted(objs, key=lambda o: o.location.z)
+    return sorted(objs, key=_z_world)
 
 
 def export_bench(output_dir):
@@ -141,7 +167,7 @@ def export_bench(output_dir):
         np.save(os.path.join(output_dir, fname), _image_to_array(img).astype(np.float64))
         layers.append({
             "name": obj.name,
-            "z_m": round(float(obj.location.z * sc), 9),
+            "z_m": _clean(_z_world(obj) * sc),
             "n_medium": float(obj["optlab_n_medium"]),
             "n_material": float(obj["optlab_n_material"]),
             "kappa": float(obj["optlab_kappa"]),
@@ -150,12 +176,12 @@ def export_bench(output_dir):
         })
     bench = {
         "schema": SCHEMA,
-        "wavelength_m": float(src["optlab_wavelength_m"]),
-        "grid": {"n": n, "pixel_m": float(src["optlab_pixel_m"])},
-        "source": {"z_m": round(float(src.location.z * sc), 9)},
+        "wavelength_m": _clean(src["optlab_wavelength_m"]),
+        "grid": {"n": n, "pixel_m": _clean(src["optlab_pixel_m"])},
+        "source": {"z_m": _clean(_z_world(src) * sc)},
         "layers": layers,
         "detector": {
-            "z_m": round(float(det.location.z * sc), 9),
+            "z_m": _clean(_z_world(det) * sc),
             "regions": json.loads(det["optlab_regions"]),
         },
         "output": {"intensity_npy": "detector_intensity.npy"},
@@ -215,7 +241,9 @@ def trace_optical_path(origin_m, direction, max_hits=8):
     depsgraph = bpy.context.evaluated_depsgraph_get()
     d = Vector(direction).normalized()
     o = Vector(origin_m) / sc
-    eps = 1e-7  # BU; above float32 resolution
+    # Advance in Blender units, well above float32 resolution for |z| up to ~100 BU
+    # (ulp ~ 8e-6 at 100 BU); planes closer than EPS_BU in z are not resolved.
+    eps = EPS_BU
     start = o.copy()
     hits = []
     for _ in range(max_hits):

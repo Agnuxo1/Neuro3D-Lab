@@ -7,12 +7,13 @@ Este documento fija las convenciones y ecuaciones que usa `optlab`. Todo el cód
 - Campo escalar complejo `u(x, y)` en un plano transversal. Dependencia temporal `exp(-i·ω·t)`.
 - Unidades SI: metros y segundos. La escena de Blender se convierte a metros con `scene.unit_settings.scale_length` (por defecto 1 unidad de Blender = 1 m).
 - Rejilla cuadrada `n × n` con paso `pixel_m`. Índices de array: `[fila, columna] = [y, x]`.
+- Medio entre planos del banco: `medium_index` (por defecto 1,0). La propagación usa `λ/medium_index`; la fase de los elementos usa la longitud de onda en vacío `λ` con `(n_mat − n_med)`.
 - Número de onda en un medio de índice `n`: `k = 2π·n/λ`.
 - Fase de camino óptico: `φ = 2π·OPL/λ`, con `OPL = Σ n_i·d_i`.
 
 ## 2. Propagación libre (espectro angular)
 
-Para una distancia `d` en un medio de índice 1:
+Para una distancia `d` en un medio de índice 1 (en un medio de índice `n`, se sustituye `λ` por `λ/n`):
 
 ```
 U = fft2(u)
@@ -51,10 +52,12 @@ Incidencia oblicua con ley de Snell `n1·sinθi = n2·sinθt`:
 
 ```
 r_s = (n1 cosθi − n2 cosθt)/(n1 cosθi + n2 cosθt)
-r_p = (n2 cosθi − n1 cosθt)/(n2 cosθi + n1 cosθt)
+r_p = (n1 cosθt − n2 cosθi)/(n1 cosθt + n2 cosθi)
 R = |r|²
 T = (n2 cosθt)/(n1 cosθi) · |t|²
 ```
+
+Convención de signo de `r_p` (la que usa `fresnel.py`): `r_p` se define con el campo eléctrico, de modo que `r_p = r_s` en incidencia normal (`θi = 0` da `(n1 − n2)/(n1 + n2)` en ambas). Otras convenciones (p. ej. la de Hecht) toman el signo opuesto y dan `r_p = −r_s` en incidencia normal. `R` y `T` no dependen de este signo; solo la fase de `r_p`. En Brewster `r_p = 0` y para `θi` mayor que Brewster, con `n2 > n1`, `r_p > 0`.
 
 Reflexión total interna cuando `n1·sinθi > n2`: `R = 1`, `T = 0`.
 
@@ -88,7 +91,7 @@ Gradiente analítico, con la convención `ḡ = ∂L/∂z*`:
 ḡ_f       = (∂L/∂I) · f,      ∂L/∂I = scale · Σ_c (p_c − δ_{cy}) · mask_c
 ḡ_{a_L}   = P^H_{d_{L+1}}(ḡ_f)
 para k = L..1:
-    ∂L/∂φ_k = −2 · Im(ḡ_{a_k} · a_k)
+    ∂L/∂φ_k = −2 · Im(conj(ḡ_{a_k}) · a_k)
     ḡ_{b_k} = ḡ_{a_k} · conj(exp(iφ_k))
     ḡ_{a_{k−1}} = P^H_{d_k}(ḡ_{b_k})
 ```

@@ -23,4 +23,5 @@ def mzi(theta, phi):
 
 def is_unitary(U, atol=1e-12):
     U = np.asarray(U)
-    return bool(np.allclose(U.conj().T @ U, np.eye(U.shape[0]), atol=atol))
+    # max|U^H U - I| <= atol, sin tolerancia relativa (np.allclose anade rtol=1e-5)
+    return bool(np.max(np.abs(U.conj().T @ U - np.eye(U.shape[0]))) <= atol)

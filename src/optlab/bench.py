@@ -4,6 +4,8 @@ Fuente en z_m -> capas (elementos de fase delgados) -> detector. Las distancias
 son diferencias de z (estrictamente crecientes). Propagacion por espectro angular,
 exp(-i w t); t = exp(i 2 pi (n_mat-n_med) h/lambda) exp(-2 pi kappa h/lambda),
 h = height_npy * height_max_m. Rutas relativas a base_dir.
+medium_index (por defecto 1.0): indice del medio entre planos; la propagacion usa
+lambda/medium_index y todos los n_medium de las capas deben coincidir con el.
 """
 from __future__ import annotations
 
@@ -43,6 +45,7 @@ def _validate(b):
     if b.get("schema") != SCHEMA:
         raise ValueError(f"schema must be '{SCHEMA}'")
     _num(_need(b, "wavelength_m", "bench"), "wavelength_m", True)
+    medium = _num(b.get("medium_index", 1.0), "medium_index", True)
     grid = _need(b, "grid", "bench")
     n = _need(grid, "n", "grid")
     if isinstance(n, bool) or not isinstance(n, int) or n < 2:
@@ -60,7 +63,9 @@ def _validate(b):
         raise ValueError("detector.regions must be a list")
     for i, r in enumerate(regions):
         for k in ("cx_m", "cy_m", "w_m", "h_m"):
-            _num(_need(r, k, f"detector.regions[{i}]"), k)
+            v = _num(_need(r, k, f"detector.regions[{i}]"), k)
+            if k in ("w_m", "h_m") and v <= 0:
+                raise ValueError(f"detector.regions[{i}].{k} must be > 0")
     prev, prev_name = zs, "source"
     for i, ly in enumerate(layers):
         name = ly.get("name", f"layers[{i}]") if isinstance(ly, dict) else f"layers[{i}]"
@@ -68,13 +73,16 @@ def _validate(b):
         if z <= prev:
             raise ValueError(f"z must be strictly increasing: {name} z_m={z} <= {prev_name} z_m={prev}")
         prev, prev_name = z, name
-        _num(_need(ly, "n_medium", name), "n_medium", True)
+        nm = _num(_need(ly, "n_medium", name), "n_medium", True)
+        if not np.isclose(nm, medium, rtol=0.0, atol=1e-12):
+            raise ValueError(f"{name}: n_medium={nm} != bench medium_index={medium}")
         _num(_need(ly, "n_material", name), "n_material", True)
         if _num(ly.get("kappa", 0.0), "kappa") < 0:
             raise ValueError(f"{name}: kappa must be >= 0")
         if not isinstance(_need(ly, "height_npy", name), str):
             raise ValueError(f"{name}: height_npy must be a path string")
-        _num(_need(ly, "height_max_m", name), "height_max_m")
+        if _num(_need(ly, "height_max_m", name), "height_max_m") < 0:
+            raise ValueError(f"{name}: height_max_m must be >= 0")
     if zd <= prev:
         raise ValueError(f"z must be strictly increasing: detector z_m={zd} <= {prev_name} z_m={prev}")
     return b
@@ -105,15 +113,18 @@ def simulate_bench(path_or_dict, base_dir=None, output_path=None, return_scores=
     else:
         u = np.ones((n, n), dtype=complex)
     z = src["z_m"]
+    lam_med = lam / float(b.get("medium_index", 1.0))  # longitud de onda en el medio
     for ly in b.get("layers", []):
-        u = angular_spectrum(u, px, lam, ly["z_m"] - z)
+        u = angular_spectrum(u, px, lam_med, ly["z_m"] - z)
         z = ly["z_m"]
         h = np.load(rp(ly["height_npy"]))
         if h.shape != (n, n):
             raise ValueError(f"{ly.get('name', '?')}: height shape {h.shape} != ({n},{n})")
+        if not np.isfinite(h).all():
+            raise ValueError(f"{ly.get('name', '?')}: height contains NaN/inf")
         h = h.astype(float) * ly["height_max_m"]
         u = u * phase_element(h, lam, ly["n_material"], ly["n_medium"], ly.get("kappa", 0.0))
-    u = angular_spectrum(u, px, lam, b["detector"]["z_m"] - z)
+    u = angular_spectrum(u, px, lam_med, b["detector"]["z_m"] - z)
     I = np.abs(u) ** 2
     if output_path:
         np.save(output_path, I)
