@@ -43,4 +43,22 @@ Se mide el error de E1 (haz gaussiano, amplitud en el eje) para `z` = 0,5·z_max
 
 ## Registro de resultados
 
-_Se completa tras ejecutar `experiments/run_validation.py`. Cada resultado: fecha UTC, commit, valores medidos y veredicto (cumple / no cumple / fuera de dominio)._
+**Ejecución:** `python experiments/run_validation.py` (CPU, ~7 s). Resumen en `experiments/results/validation_summary.json`; datos completos fuera del repo.
+
+| Exp. | Medida | Valor máximo observado | Umbral | Veredicto |
+|---|---|---|---|---|
+| E1 | error relativo de `w(z)` | 4,1e-5 | 0,005 | cumple |
+| E1 | error relativo de amplitud en el eje | 5,6e-6 | 0,005 | cumple |
+| E1 | error de fase de Gouy (rad) | 1,2e-5 | 0,005 | cumple |
+| E1 | error relativo de energía | 3,3e-16 | 1e-9 | cumple |
+| E2 | error RMS en `z_T` | 2,05e-6 | 0,01 | cumple |
+| E2 | error RMS en `z_T/2` (debe ser grande) | 1,35 | ≥ 0,5 | cumple |
+| E3 | error absoluto de I(0,z), z = 20, 40, 80 mm | 7,2e-3 | 0,05 | cumple |
+| E4 | exploratorio: haz gaussiano a 0,5, 1 y 2 · z_max | error ≤ 5e-5 | sin veredicto | — |
+
+**Control negativo del arnés (no pre-registrado, comprobación de poder):** propagar con `−z` en lugar de `+z` produce un error de fase de Gouy de 0,49 rad (z = 0,25 z_R) y 1,57 rad (z = z_R). Ambos superan el umbral de 0,005 por varios órdenes de magnitud, así que el criterio sí detecta un error de signo.
+
+**Lectura honesta:**
+- La validación cubre el propagador para campos suaves y periódicos. Un haz gaussiano y un patrón periódico tienen poco contenido de alta frecuencia, así que E4 no muestra degradación ni a 2·z_max. El límite `z_max` es conservador para campos suaves; no implica que el método falle a esa distancia para campos con bordes nítidos. Esto no se ha probado aquí.
+- E3 usa una apertura con borde nítido y sí es el caso que discrimina el dominio, pero está dentro de `z_max` (103 mm). Un contrato posterior debería probar bordes nítidos más allá de `z_max`.
+- E1 y E2 están dentro de tolerancias muy holgadas. Las tolerancias se fijaron antes de medir; no las ajusto a la baja ahora.

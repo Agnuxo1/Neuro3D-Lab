@@ -1,0 +1,9 @@
+{
+ "contract": "CONTRATO-002",
+ "verdicts": {
+  "E1": "cumple",
+  "E2": "cumple",
+  "E3": "cumple",
+  "E4": "exploratorio"
+ }
+}
