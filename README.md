@@ -1,204 +1,292 @@
 <p align="center">
-  <img src="docs/img/header.gif" alt="Neuro3D-Lab: propagación de un haz gaussiano y anchura numérica frente a analítica" width="100%">
+  <img src="docs/img/header.gif" alt="Neuro3D-Lab: Gaussian-beam propagation, numerical width compared with the analytic width" width="100%">
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img alt="Licencia Apache-2.0" src="https://img.shields.io/badge/licencia-Apache--2.0-22d3ee"></a>
-  <img alt="Python 3.13" src="https://img.shields.io/badge/python-3.13-a78bfa">
+  <a href="LICENSE"><img alt="Core licence: Apache-2.0" src="https://img.shields.io/badge/core%20licence-Apache--2.0-22d3ee"></a>
+  <a href="blender/neuro3d_lab/LICENSE"><img alt="Blender add-on licence: GPL-3.0-or-later" src="https://img.shields.io/badge/add--on%20licence-GPL--3.0--or--later-a78bfa"></a>
   <img alt="Blender 4.5.14" src="https://img.shields.io/badge/Blender-4.5.14-fbbf24">
-  <img alt="Pruebas" src="https://img.shields.io/badge/pruebas-29%20passed-34d399">
-  <img alt="Estado" src="https://img.shields.io/badge/estado-v0.1%20en%20validación-f87171">
+  <img alt="Status: simulation only" src="https://img.shields.io/badge/status-simulation%20only-f87171">
 </p>
 
-<p align="center"><b>Un laboratorio óptico virtual: Blender es el banco, la física la calcula un núcleo verificado.</b></p>
+<p align="center"><b>A virtual optical bench. Blender lays out the bench and shows the result; a tested Python core computes the scalar field.</b></p>
 
 ---
 
-## ¿Qué es?
+## Abstract
 
-Neuro3D-Lab permite diseñar y simular **redes neuronales ópticas** en un banco virtual de Blender. La geometría (fuente, planos de fase, detector) vive en la escena de Blender. El campo óptico coherente lo calcula `optlab`, un núcleo en numpy que implementa difracción, interferencia y reflexión con fórmulas comprobables.
+Neuro3D-Lab is a simulation project for coherent scalar optical fields. It has two parts:
 
-Cada resultado tiene un **contrato preregistrado**: los umbrales se fijan antes de medir y no se relajan después. Los fallos también se publican.
+- **optlab** (`src/optlab`), a NumPy core that propagates a scalar field with the angular-spectrum method. It also contains models of Fresnel interfaces, a Mach–Zehnder interferometer and a phase-only diffractive neural network (D2NN).
+- **A Blender add-on** (`blender/neuro3d_lab`) that builds the bench, exports it to optlab and displays the detector intensity that optlab returns.
+
+The project is **not** a physical device. It contains no measured data, and it does not model polarisation, reflections between planes or spectral dispersion. Each quantitative claim is linked to a contract with thresholds, or is labelled exploratory. The D2NN experiment is still in progress and reports no TEST accuracy.
+
+---
+
+## Scope of evidence
+
+| Claim | Evidence | Artifact | Status |
+|---|---|---|---|
+| The scalar angular-spectrum propagator reproduces an analytic Gaussian beam, including its Gouy phase | CONTRATO-002, E1: worst relative error 4.1 × 10⁻⁵ (threshold 5 × 10⁻³) | `experiments/run_validation.py`, `experiments/results/validation_summary.json` | Pass, pre-registered |
+| Talbot self-imaging is reproduced at the Talbot distance | CONTRATO-002, E2: worst relative error 2.1 × 10⁻⁶ (threshold 1 × 10⁻²) | same as above | Pass, pre-registered |
+| On-axis Fresnel diffraction by a circular aperture matches the analytic formula | CONTRATO-002, E3: worst error 7.2 × 10⁻³ (threshold 5 × 10⁻²) | same as above | Pass, pre-registered |
+| Analytic tilted plane waves propagate correctly on the D2NN grid | CONTRATO-004, T1: maximum relative error 3.7 × 10⁻¹⁴ (threshold 1 × 10⁻¹⁰) | `experiments/run_regime_d2nn.py`, `experiments/results/regime_d2nn_summary.json` | Pass, pre-registered |
+| The D2NN-grid intensity does not depend on zero padding (N = 128 against N = 256, 18 mm) | CONTRATO-004, T2: relative L2 difference 4.4 × 10⁻² (threshold 2 × 10⁻²) | same as above | Fail, published; a window-size effect of about 4%, most likely from the periodic boundary (mechanism not isolated) |
+| The D2NN-grid result is converged in pixel size | CONTRATO-004, T3: relative L2 difference 3.04 (threshold 5 × 10⁻²) | same as above | Fail as pre-registered; an exploratory block sum gives 2.8 × 10⁻², post hoc, not a verdict |
+| Behaviour beyond the validity limit of the propagator | E4, one smooth Gaussian input | CONTRATO-002 | Exploratory, no verdict |
+| A reversed propagation sign is detected by the Gouy-phase check | Gouy-phase errors of 0.49 and 1.57 rad | CONTRATO-002 (record) | Control, not pre-registered; the script that reproduces it is not yet in the repository |
+| Fresnel interfaces, Mach–Zehnder unitarity and related core functions | 32 unit tests pass (`python -m pytest -q`) | `tests/` | Unit tests only; no analytic contract |
+| The add-on builds, exports, simulates and imports a bench | Blender self-test: 15 of 15 steps PASS (Blender 4.5.14, headless) | `blender/selftest/run_selftest.py` | Pass; run manually, not in CI |
+| The add-on manifest is valid | `blender --command extension validate blender/neuro3d_lab` | `blender/neuro3d_lab/blender_manifest.toml` | Pass |
+| The Blender bench image shows the optlab intensity | Visualisation only; planes enlarged 15 times in x and y | `blender/render_bench_gif.py`, `docs/img/blender_bench.gif` | Illustration, not evidence |
+| Digit-classification accuracy of the D2NN (under evaluation) | CONTRATO-003 in progress | `experiments/run_d2nn_digits.py` | In progress; no TEST result |
+| Any result applies to a physical device or a measurement | None | none | Not claimed; simulation only, no hardware experiment exists |
+
+---
+
+## Pipeline and the Blender bench
 
 <p align="center">
-  <img src="docs/img/pipeline.gif" alt="Flujo: Blender exporta el banco, optlab calcula el campo, el resultado vuelve a Blender" width="85%">
+  <img src="docs/img/pipeline.gif" alt="Pipeline: Blender exports the bench, optlab computes the field, and the result returns to Blender" width="85%">
 </p>
 
-El banco funciona en tres pasos: Blender exporta la geometría y las alturas de fase (`optlab.bench/1`), `optlab` propaga el campo y devuelve la intensidad del detector, y Blender la muestra como una imagen emisiva.
-
----
-
-## El banco en Blender
-
-La intensidad que calcula `optlab` se carga en el detector de la escena de Blender y se renderiza con Cycles en CPU.
+Blender exports the bench geometry and the phase heights (`optlab.bench/1`). optlab propagates the field and returns the detector intensity. Blender displays that intensity as an emissive image. Blender only visualises; it does not compute the field.
 
 <p align="center">
-  <img src="docs/img/blender_bench.gif" alt="Banco óptico renderizado en Blender: fuente, dos capas de fase y detector con la intensidad calculada" width="90%">
+  <img src="docs/img/blender_bench.gif" alt="Optical bench rendered in Blender: source, two phase layers and a detector showing the calculated intensity" width="90%">
 </p>
 
-> Blender solo visualiza. El cálculo físico lo hace `optlab`. Para que se vean, los planos están ampliados 60 veces en x e y; la escala es visual, no física.
+The bench demo uses N = 256 pixels with an 8 µm pixel, λ = 633 nm, and planes at 0, 20, 40 and 60 mm. It is rendered with Cycles on the CPU. The z spacing is physical, and the self-test checks the demo spacings against the validity limit of the propagator. For visibility only, each plane is enlarged 15 times in x and y, so the image is a schematic and not a to-scale picture. It illustrates optlab output; it is not a measured result.
 
 ---
 
-## Física implementada
+## Physics implemented
 
-### Propagación por espectro angular
+### Angular-spectrum propagation
 
-Difracción libre sin aproximación paraxial. El campo se propaga en el dominio de frecuencias y se vuelve al espacio con una función de transferencia exacta para ondas propagantes.
+Free-space propagation with the scalar angular-spectrum method. The transfer function applies to propagating components; evanescent components are not propagated. The formula contains no paraxial approximation.
 
 $$U = \mathcal{F}^{-1}\{H\cdot\mathcal{F}\{u_0\}\},\qquad H = \exp\!\left(i\,2\pi d\sqrt{1/\lambda^2 - f_x^2 - f_y^2}\right)$$
 
-<p align="center">
-  <img src="docs/img/propagation.gif" alt="Haz gaussiano propagándose; la anchura numérica coincide con la analítica" width="90%">
-</p>
-
-**Validación (CONTRATO-002, E1):** el haz gaussiano coincide con la solución exacta de Gouy. El error relativo de la anchura es de 4,1·10⁻⁵ frente a un umbral de 5·10⁻³. La fase de Gouy coincide dentro de 1,2·10⁻⁵ rad.
-
-### Interfaces de Fresnel
-
-Reflectancia y transmitancia para incidencia normal y oblicua, con reflexión total interna y ángulo de Brewster. Se comprueba la conservación de energía R + T = 1.
+The plain method is valid only for $d < N\,dx^2/\lambda$. The simulator refuses out-of-domain segments unless `allow_out_of_domain=True` is passed. The band-limited variant (Matsushima and Shimobaba, 2009) is not implemented in this version.
 
 <p align="center">
-  <img src="docs/img/fresnel.gif" alt="Reflectancia de Fresnel en aire-vidrio con el ángulo de Brewster" width="90%">
+  <img src="docs/img/propagation.gif" alt="Gaussian beam propagating; the numerical width matches the analytic width" width="90%">
 </p>
 
-### Interferómetro Mach-Zehnder
+- **CONTRATO-002, E1:** the width and Gouy phase of a Gaussian beam match the analytic solution, with worst relative error 4.1 × 10⁻⁵ (threshold 5 × 10⁻³). The Gaussian reference is a paraxial solution.
+- **CONTRATO-004, T1:** analytic tilted plane waves on the D2NN grid match the analytic solution, with maximum relative error 3.7 × 10⁻¹⁴ (threshold 1 × 10⁻¹⁰).
 
-Matriz unitaria de dos divisores 50/50 y un desfasador. Con la entrada en el puerto 1, la potencia de salida sigue $\sin^2(\theta/2)$, y la matriz es unitaria dentro de 10⁻¹² en todo el rango.
+### Fresnel interfaces
+
+Reflectance and transmittance for normal and oblique incidence, including the Brewster angle and total internal reflection. R + T = 1 holds by construction, so it is not independent evidence. Unit tests cover these functions; there is no analytic contract for them.
 
 <p align="center">
-  <img src="docs/img/mzi.gif" alt="Reparto de potencia de un interferómetro Mach-Zehnder al variar la fase" width="90%">
+  <img src="docs/img/fresnel.gif" alt="Fresnel reflectance for air-glass with the Brewster angle" width="90%">
 </p>
 
-### Autoimagen de Talbot
+### Mach–Zehnder interferometer
 
-La red de amplitud se reproduce sin lente en $z_T = 2p^2/\lambda$. En $z_T$ el patrón coincide con la entrada; en $z_T/2$ el patrón es distinto (no es una autoimagen).
+A unitary matrix made of two 50/50 beam splitters and a phase shifter. With the input at port 1, the output power follows sin²(θ/2). Unitarity is checked at sampled phase values in the unit tests, not over the full range.
 
 <p align="center">
-  <img src="docs/img/talbot.gif" alt="Autoimagen de Talbot: el perfil de intensidad se repite a z_T" width="90%">
+  <img src="docs/img/mzi.gif" alt="Power split of a Mach-Zehnder interferometer as the phase changes" width="90%">
 </p>
 
-**Validación (CONTRATO-002, E2):** en $z_T$ el error RMS es de 2·10⁻⁶ frente a un umbral de 10⁻². En $z_T/2$ el patrón es distinto del de entrada (error 1,35, criterio ≥ 0,5).
+### Talbot self-imaging
 
-### Difracción de Fresnel por una apertura circular
-
-Intensidad en el eje de una apertura circular, comparada con la solución de Fresnel $I/I_0 = 4\sin^2(\pi N_F/2)$.
+An amplitude grating with period p reproduces its image without a lens at $z_T = 2p^2/\lambda$. At $z_T/2$ the pattern differs from the input. The reference for this effect is paraxial.
 
 <p align="center">
-  <img src="docs/img/aperture.gif" alt="Intensidad en el eje de una apertura circular, numérica frente a analítica" width="90%">
+  <img src="docs/img/talbot.gif" alt="Talbot self-image: the intensity profile repeats at z_T" width="90%">
 </p>
 
-**Validación (CONTRATO-002, E3):** el error absoluto máximo es de 7·10⁻³ frente a un umbral de 5·10⁻². El radio se toma del área muestreada, no del radio nominal, y eso está declarado en el contrato.
+- **CONTRATO-002, E2:** the relative error at $z_T$ is 2.1 × 10⁻⁶ (threshold 1 × 10⁻²).
+
+### Fresnel diffraction by a circular aperture
+
+On-axis intensity compared with the Fresnel solution $I/I_0 = 4\sin^2(\pi N_F/2)$. The radius used is the effective radius of the sampled aperture, not the nominal radius; the contract declares this.
+
+<p align="center">
+  <img src="docs/img/aperture.gif" alt="On-axis intensity of a circular aperture, numerical and analytic" width="90%">
+</p>
+
+- **CONTRATO-002, E3:** the worst error is 7.2 × 10⁻³ (threshold 5 × 10⁻²).
 
 ---
 
-## Red difractiva de fase (D2NN)
+## Diffractive neural network (D2NN)
 
-Tres capas de fase pura, 18 mm entre planos, 128 × 128 píxeles, con un detector de diez regiones. La entrada es un dígito manuscrito normalizado en energía.
+The D2NN is a scalar, phase-only model. It has three phase layers, 18 mm between planes, a 128 × 128 pixel grid with pixel pitch 0.4 mm, and a detector of ten regions. The input is a handwritten digit from the scikit-learn digits dataset, normalised to unit energy.
 
-<p align="center">
-  <img src="docs/img/d2nn_flow.gif" alt="Flujo de un dígito a través de la red: la energía se reparte entre 10 regiones del detector" width="95%">
-</p>
-
-> La animación usa fases aleatorias para mostrar el flujo de la luz. No es un resultado entrenado.
-
-### Resultados en dígitos manuscritos (CONTRATO-003)
+The wavelength is λ = 0.75 mm, which is in the terahertz range and not visible light. The sampling is dx/λ = 0.53, which is coarser than λ/2.
 
 <p align="center">
-  <img src="docs/img/d2nn_results.gif" alt="Precisión en TEST de la D2NN por semilla, bases y controles" width="95%">
+  <img src="docs/img/d2nn_flow.gif" alt="Flow of a digit through the network: the energy is shared among 10 detector regions" width="95%">
 </p>
 
-_Resultados pendientes: el experimento está en ejecución. Esta sección se completará con los valores medidos, sin cambiar los umbrales._
+The animation uses random phases to show how light flows through the network. It is not a trained result.
+
+### Sampling and boundary checks (CONTRATO-004)
+
+- **T1 (pass):** analytic tilted plane waves, as above.
+- **T2 (fail):** zero padding. The intensity from the N = 128 grid and from an N = 256 grid with the same pixel pitch differs by a relative L2 of 4.4 × 10⁻² (threshold 2 × 10⁻²). The 4% difference is a window-size effect of the periodic FFT grid. The most likely cause is wrap-around at the 51.2 mm boundary, but this test does not isolate the mechanism.
+- **T3 (fail as pre-registered):** pixel convergence, relative L2 3.04 (threshold 5 × 10⁻²). The contract text said "block-averaged", which was wrong. An energy-conserving block sum gives 2.8 × 10⁻²; this is exploratory and post hoc, not a verdict.
+
+These failures are published with their values. D2NN numbers from this grid should be read with the boundary and sampling caveats above.
 
 ---
 
-## Método científico: contratos y veredictos
+## Scientific method: contracts and verdicts
 
-Cada afirmación del proyecto tiene un contrato con umbrales fijados antes de medir.
+Each contract states its thresholds. The git history records when each threshold was committed relative to its run; CONTRATO-001 was committed together with its code. This is not an external pre-registration, and no registry timestamp exists. Failures are published with their values.
 
-| Contrato | Qué prueba | Estado |
+| Contract | What it tests | Status |
 |---|---|---|
-| [CONTRATO-001](docs/CONTRACTS/CONTRATO-001-nucleo.md) | Pruebas unitarias del núcleo, orientación y self-test de Blender | 29 pruebas en verde; self-test 14/14 |
-| [CONTRATO-002](docs/CONTRACTS/CONTRATO-002-validacion-analitica.md) | Propagador frente a soluciones analíticas | E1, E2, E3 cumplen; E4 exploratorio |
-| [CONTRATO-003](docs/CONTRACTS/CONTRATO-003-d2nn-digitos.md) | D2NN en dígitos con controles y base de parámetros comparables | En ejecución |
+| [CONTRATO-001](docs/CONTRACTS/CONTRATO-001-nucleo.md) | Core unit tests and the Blender self-test | `python -m pytest -q`: 32 pass. Blender self-test: 15 of 15 steps PASS |
+| [CONTRATO-002](docs/CONTRACTS/CONTRATO-002-validacion-analitica.md) | Analytic validation of the propagator | E1, E2 and E3 pass; E4 exploratory |
+| [CONTRATO-003](docs/CONTRACTS/CONTRATO-003-d2nn-digitos.md) | D2NN on handwritten digits, with controls | In progress; no TEST result |
+| [CONTRATO-004](docs/CONTRACTS/CONTRATO-004-regimen-d2nn.md) | D2NN sampling regime (dx/λ = 0.53) | T1 pass; T2 and T3 fail, published with their values |
+
+**Validation summary**
+
+| Check | Quantity | Result | Threshold | Verdict |
+|---|---|---|---|---|
+| E1, Gaussian beam width and Gouy phase (CONTRATO-002) | worst relative error | 4.1 × 10⁻⁵ | 5 × 10⁻³ | Pass |
+| E2, Talbot self-imaging at $z_T$ (CONTRATO-002) | worst relative error | 2.1 × 10⁻⁶ | 1 × 10⁻² | Pass |
+| E3, on-axis circular aperture (CONTRATO-002) | worst error in $I/I_0$ | 7.2 × 10⁻³ | 5 × 10⁻² | Pass |
+| E4, smooth Gaussian beyond the validity limit (CONTRATO-002) | not applicable | not applicable | not applicable | Exploratory, no verdict |
+| Negative control: reversed propagation sign (CONTRATO-002) | Gouy-phase error | 0.49 and 1.57 rad | not applicable | Detected; control, not pre-registered |
+| T1, tilted plane waves (CONTRATO-004) | maximum relative error | 3.7 × 10⁻¹⁴ | 1 × 10⁻¹⁰ | Pass |
+| T2, zero padding N = 128 against N = 256 (CONTRATO-004) | relative L2 difference in intensity | 4.4 × 10⁻² | 2 × 10⁻² | Fail |
+| T3, pixel convergence (CONTRATO-004) | relative L2 difference in intensity | 3.04 | 5 × 10⁻² | Fail as pre-registered |
 
 <p align="center">
-  <img src="docs/img/verdicts.gif" alt="Veredictos de cada criterio preregistrado" width="90%">
+  <img src="docs/img/verdicts.gif" alt="Verdicts for each pre-registered check" width="90%">
 </p>
-
-**Controles de poder del arnés:** propagar con el signo invertido produce errores de fase de Gouy de 0,49 y 1,57 rad, muy por encima del umbral. Eso demuestra que la prueba detecta errores reales.
-
-**Auditoría independiente:** una revisión de código encontró tres fallos de alta severidad y siete de media. Todos están corregidos o documentados en [`coordinacion/respuestas/`](coordinacion/respuestas/). Los dos más importantes eran que `n_medium` no afectaba a la propagación y que las alturas de fase se perdían al guardar el `.blend`.
 
 ---
 
-## Usar el laboratorio
+## D2NN status
 
-Requisitos: Python 3.13 y Blender 4.5.14 (para el add-on).
+**In progress.** CONTRATO-003 has not finished, and no TEST accuracy is reported. Validation (DEV) accuracies from the running experiment are preliminary and are not results. The pending work includes the final TEST run, the baselines, controls C1 to C3 and the summary file that the figure generator reads. The D2NN results figure will be generated when that file exists.
+
+---
+
+## Limitations
+
+- **Scalar model.** There is no polarisation and no vector field. The scalar model may not hold for light scattered by pixel-scale structure at large angles, which is the regime of the D2NN grid.
+- **No plane-to-plane reflections and no spectral dispersion** are modelled.
+- **Periodic boundary.** The FFT propagator wraps light around the window; see T2.
+- **Sampling regime.** The D2NN grid (dx/λ = 0.53) lies outside the range of the analytic checks in CONTRATO-002, which used dx/λ between 3 and 13. Only CONTRATO-004 tests this regime, and its T2 and T3 checks failed.
+- **Validity limit.** The plain angular spectrum is valid for $d < N\,dx^2/\lambda$, and the band-limited variant is not implemented. Behaviour beyond the limit is examined only by E4, which uses one smooth Gaussian input and has no verdict.
+- **Relative intensity.** The results are not calibrated in watts. Detection is ideal: there is no noise and no quantisation.
+- **Simulation only.** No physical hardware exists, and no measured data are used.
+- **Benchmark.** The digits dataset is small (8 × 8 pixels), so the results are not directly comparable with published D2NN results.
+- **Internal verification.** The tests and contracts were written and run within the project. No external reviewer has reproduced the results yet.
+- **Blender self-test.** It is run manually and is not part of continuous integration.
+
+---
+
+## Installation and reproduction
+
+Requirements: Python 3.10 or newer (`requires-python` in `pyproject.toml`). optlab installs NumPy and SciPy. Blender 4.5.14 is needed only for the add-on checks.
+
+Core install, unit tests and analytic validation:
 
 ```bash
 python -m pip install -e ".[dev]"
 python -m pytest -q
-```
-
-Validación analítica (CONTRATO-002, unos 7 s en CPU):
-
-```bash
 python experiments/run_validation.py
 ```
 
-Self-test del add-on en Blender en modo headless:
+Blender add-on self-test and manifest validation (replace `path/to/blender` with your Blender 4.5.14 executable):
 
 ```bash
-"D:/TOOLS/Blender/blender-4.5.14-windows-x64/blender.exe" -b --factory-startup -P blender/selftest/run_selftest.py
+"path/to/blender" -b --factory-startup -P blender/selftest/run_selftest.py
+"path/to/blender" --command extension validate blender/neuro3d_lab
 ```
 
-Regenerar los GIF del README (necesita matplotlib, pillow y scikit-learn):
+Bench GIF (the second step needs Pillow):
 
 ```bash
-python docs/figures/make_figures.py
+"path/to/blender" -b --factory-startup -P blender/render_bench_gif.py
+python blender/render_bench_gif.py --gif
+```
+
+D2NN experiments and README figures (install the optional extras first):
+
+```bash
+python -m pip install -e ".[experiments,figures]"
+python experiments/run_regime_d2nn.py    # CONTRATO-004
+python experiments/run_d2nn_digits.py    # CONTRATO-003, in progress, long-running
+python docs/figures/make_figures.py      # README figures
+```
+
+By default, outputs go to `.cognition/neuro3d-lab` in the folder above the repository. Set `NEURO3D_LAB_OUT` to use another folder.
+
+Continuous integration (`.github/workflows/tests.yml`) runs `pytest -q` on Ubuntu with Python 3.13 for pushes and pull requests to `master`. It does not run the Blender self-test.
+
+---
+
+## Repository structure
+
+```
+src/optlab/                  scalar-field core in NumPy: propagation, Fresnel, interferometer, elements, D2NN, bench
+blender/neuro3d_lab/         Blender add-on (GPL-3.0-or-later): build, export, import, operators
+blender/selftest/            headless self-test of the add-on
+blender/render_bench_gif.py  renders the bench GIF
+experiments/                 scripts for CONTRATO-002, CONTRATO-003 and CONTRATO-004
+experiments/results/         versioned summaries of the contracts
+docs/                        model, architecture and contracts
+docs/figures/                generator of the README figures
+coordinacion/                coordination records and review responses
+tests/                       unit tests for the core
+.github/workflows/           continuous integration (unit tests)
 ```
 
 ---
 
-## Estructura
+## Related projects
 
-```
-src/optlab/           núcleo físico en numpy
-blender/neuro3d_lab/  add-on de Blender: banco, exportación, importación
-blender/selftest/     self-test headless del add-on
-experiments/          scripts de los contratos
-experiments/results/  resúmenes versionados de los contratos
-docs/                 modelo físico, arquitectura y contratos
-docs/figures/         generador de los GIF del README
-coordinacion/         protocolo de trabajo, tablón, tareas y respuestas
-tests/                pruebas del núcleo
-```
+These open-source projects are related. No numerical comparison with them has been made yet.
+
+- Blender Optics Simulator
+- BlenderPhotonics
+- TorchOptics
+- onn-simulation
+- POPPY
 
 ---
 
-## Límites conocidos
+## References
 
-- Modelo escalar: sin polarización ni campos vectoriales. Con incidencia oblicua en planos de fase, el modelo escalar no basta.
-- Sin reflexiones entre planos y sin dispersión espectral.
-- Intensidad relativa, sin calibración en vatios.
-- Solo simulación. Ningún resultado aquí es un dispositivo fabricado ni una medida experimental.
-- El espectro angular sin banda limitada tiene un límite de validez $z < N\,dx^2/\lambda$. Para campos suaves es conservador; para bordes nítidos más allá del límite, no está validado aún.
+- Lin, X. et al. All-optical machine learning using diffractive deep neural networks. Science (2018). [doi:10.1126/science.aat8084](https://doi.org/10.1126/science.aat8084) · [arXiv:1804.08711](https://arxiv.org/abs/1804.08711)
+- Matsushima, K. & Shimobaba, T. Band-limited angular spectrum method for numerical simulation of free-space propagation in far and near fields. Optics Express 17, 19662 (2009).
+- Clements, W. R. et al. An optimal design for universal multiport interferometers. Optica (2016). [doi:10.1364/OPTICA.3.001460](https://doi.org/10.1364/OPTICA.3.001460)
 
----
-
-## Referencias
-
-- Lin, X. et al. *All-optical machine learning using diffractive deep neural networks.* Science (2018). [doi:10.1126/science.aat8084](https://doi.org/10.1126/science.aat8084) · [arXiv:1804.08711](https://arxiv.org/abs/1804.08711)
-- Matsushima, K. & Shimobaba, T. *Band-limited angular spectrum method for numerical simulation of free-space propagation in far and near fields.* Optics Express 17, 19662 (2009).
-- Clements, W. R. et al. *An optimal design for universal multiport interferometers.* Optica 3, 1460 (2016). [doi:10.1364/OPTICA.3.001460](https://doi.org/10.1364/OPTICA.3.001460)
-
-Trabajo previo del autor que se integra aquí: [Neuro3D](https://github.com/Agnuxo1/Neuro3D), [Silice-Neuro3D-Cube](https://github.com/Agnuxo1/Silice-Neuro3D-Cube), [NeuroPixel](https://github.com/Agnuxo1/NeuroPixel) y [OpenCLAW-P2P](https://github.com/Agnuxo1/OpenCLAW-P2P).
+Related work by the author: [Neuro3D](https://github.com/Agnuxo1/Neuro3D), [Silice-Neuro3D-Cube](https://github.com/Agnuxo1/Silice-Neuro3D-Cube), [NeuroPixel](https://github.com/Agnuxo1/NeuroPixel) and [OpenCLAW-P2P](https://github.com/Agnuxo1/OpenCLAW-P2P).
 
 ---
 
-## Licencia
+## Contributing and roadmap
 
-Apache License 2.0. Ver [LICENSE](LICENSE) y [NOTICE](NOTICE). El add-on se ejecuta dentro de Blender, que se distribuye bajo GPL-3.0-or-later; Blender no se redistribuye en este repositorio.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and [ROADMAP.md](ROADMAP.md) for planned work.
 
-Autor: Francisco Angulo de Lafuente ([Agnuxo1](https://github.com/Agnuxo1)).
+---
+
+## How to cite
+
+Use the metadata in [CITATION.cff](CITATION.cff) (version 0.1.0). GitHub's "Cite this repository" button reads this file. No DOI has been assigned yet.
+
+---
+
+## Licence
+
+- **optlab core** (`src/optlab`): Apache License 2.0.
+- **Blender add-on** (`blender/neuro3d_lab`): GNU General Public License v3.0 or later (GPL-3.0-or-later), with its own [LICENSE](blender/neuro3d_lab/LICENSE) file. The add-on uses GPL-3.0-or-later because the official Blender extensions catalogue requires GPL-3.0-or-later for add-ons, and the add-on imports optlab.
+
+Repository licence text: [LICENSE](LICENSE) and [NOTICE](NOTICE). Blender itself is not redistributed in this repository.
+
+Author: Francisco Angulo de Lafuente ([Agnuxo1](https://github.com/Agnuxo1)).

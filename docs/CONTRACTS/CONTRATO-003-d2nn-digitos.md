@@ -1,5 +1,32 @@
 # CONTRATO-003: red difractiva D2NN de fase en dígitos manuscritos
 
+## English summary
+
+**Purpose.** Tests whether a three-layer phase-only diffractive neural network (D2NN) classifies handwritten digits (`sklearn` `load_digits`, 8×8 images upsampled to 64×64) above chance and above a logistic regression on the same input, with three controls.
+
+**Pre-registration status.** Pre-registered on 2026-10-09 (UTC), before running `experiments/run_d2nn_digits.py`. An addendum made the same day, before any data existed, fixes further details: the McNemar test (seed 0), the definition of control C3, mini-batch training, and the use of TRAIN and DEV only. Git history shows the contract (1a4fc37) and the addendum (f28ecb9) committed before the run started. The thresholds were not changed.
+
+**Design (fixed in the contract).** Three phase layers with 18 mm between planes. Grid N = 128 with dx = 0.4 mm and λ = 0.75 mm (dx/λ = 0.53). Detector: ten 12×12 pixel regions, with logits scaled by β chosen on DEV. Adam optimizer, mini-batches of 32, 30 epochs. Hyperparameters (β, learning rate, logistic C) are chosen on DEV only, and TEST is used once.
+
+**Hypotheses and thresholds.**
+- H1 (primary): mean TEST accuracy over 5 seeds ≥ 0.85, and every seed ≥ 0.80.
+- H2: paired difference (D2NN minus logistic regression) ≥ 0, and exact McNemar p < 0.05.
+- C1: training labels permuted; mean TEST accuracy ≤ 0.15.
+- C2: untrained random phases; mean TEST accuracy ≤ 0.20.
+- C3: no phase layers (free propagation); TEST accuracy ≤ 0.20.
+
+**Status: in progress.** No TEST result exists, and no verdict has been issued for H1, H2, C1, C2 or C3. Validation (DEV) accuracies are preliminary and are not results, so they are not reported here.
+
+**What will be reported.** DEV and TEST accuracy per seed (mean and standard deviation), the TEST confusion matrix for the final configuration, all controls, compute time and network size.
+
+**Post-hoc notes.**
+- Provenance: the audit found that `experiments/run_d2nn_digits.py` was committed (af52aff) about nine minutes after its run started (log timestamp 23:02:43). Git history therefore cannot show that the committed script is the version that produced that run.
+- Grid: CONTRACT-004 (T2) found that, at 18 mm, the N = 128 grid used here changes the detector intensity by about 4 % (relative L2 4.4e-2, threshold 2e-2) compared with N = 256. A robustness rerun of the final configuration at N = 256 is required before any D2NN number from this contract is cited. It will be labelled post hoc.
+
+**Scope.** Simulation only; there is no hardware experiment. Fabrication noise, misalignment, inter-plane reflections and spectral dispersion are not covered.
+
+---
+
 **Estado:** preregistrado el 2026-10-09 (UTC), antes de ejecutar `experiments/run_d2nn_digits.py`. Commit de referencia: el que contiene este archivo.
 **Pregunta:** ¿clasifica una D2NN de fase pura (3 capas) dígitos manuscritos con más precisión que el azar y que una regresión logística de parámetros comparables sobre la misma entrada?
 **Regla:** la partición TEST se usa una sola vez, con la configuración elegida en DEV. No se selecciona nada con TEST. Todos los umbrales están fijados aquí.
@@ -71,3 +98,5 @@ Estas precisiones no cambian ningún umbral. Completan detalles que el texto ori
 ## Registro de resultados
 
 _Se completa tras ejecutar el experimento. Cada resultado: fecha UTC, commit, valores, veredicto por hipótesis y control._
+
+**Note (2026-10-10).** The audit found that `experiments/run_d2nn_digits.py` was committed (af52aff) about nine minutes after its run started (log timestamp 23:02:43). Git history therefore cannot show that the committed script is the version that produced that run. This note changes no threshold and reports no result.
