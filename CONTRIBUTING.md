@@ -57,7 +57,7 @@ Measurable claims are governed by preregistered contracts in `docs/CONTRACTS/`. 
 
 ## Licence
 
-Contributions are accepted under the terms of the Apache License, Version 2.0 (see [LICENSE](LICENSE)).
+Contributions to the core library `src/optlab/` are accepted under the Apache License, Version 2.0 ([LICENSE](LICENSE)). Contributions to the Blender add-on in `blender/` are accepted under the GNU General Public License, version 3 or later ([blender/neuro3d_lab/LICENSE](blender/neuro3d_lab/LICENSE)).
 
 ## Conduct and security
 
