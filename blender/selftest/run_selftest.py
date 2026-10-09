@@ -1,4 +1,10 @@
-"""Headless self-test: blender -b --factory-startup -P run_selftest.py"""
+"""Headless self-test of the Neuro3D Lab add-on, on the in-domain demo bench (N=256).
+
+Run from anywhere (no absolute paths):
+  blender -b --factory-startup -P blender/selftest/run_selftest.py
+Output goes to <out>/selftest, where <out> is $NEURO3D_LAB_OUT, or the system temp
+dir plus neuro3d-lab when that variable is unset. Exit code 0 means every step PASS.
+"""
 import json
 import os
 import sys
@@ -10,9 +16,8 @@ sys.path.insert(0, os.path.dirname(HERE))  # blender/ folder
 import bpy  # noqa: E402
 import numpy as np  # noqa: E402
 
-OUT = "D:/PROJECTS/.cognition/neuro3d-lab/selftest"
-OPTLAB_SRC = "D:/PROJECTS/Neuro3D-Lab/src"
-N, PIX, WL = 64, 8e-6, 6.33e-7
+# Expectations of the demo bench. Literal on purpose: they check the constants in bench_io.
+N, PIX, WL = 256, 8e-6, 6.33e-7
 Z = {"LAYER_1": 0.02, "LAYER_2": 0.04, "DETECTOR": 0.06}
 results = {}
 state = {}
@@ -33,12 +38,16 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 import neuro3d_lab  # noqa: E402
 from neuro3d_lab import bench_io  # noqa: E402
 
+OUT = os.path.join(bench_io.out_root(), "selftest")
+OPTLAB_SRC = bench_io.OPTLAB_SRC
+
 
 @step("register")
 def _():
     neuro3d_lab.register()
     assert hasattr(bpy.ops.optlab, "export_bench")
-    assert bpy.context.scene.optlab_grid_n == 64
+    assert bpy.context.scene.optlab_grid_n == N
+    assert os.path.isdir(OPTLAB_SRC), OPTLAB_SRC
 
 
 @step("build")
@@ -46,6 +55,16 @@ def _():
     bench_io.build_demo_bench(N, PIX, WL, (0.02, 0.04), 0.06, 0)
     names = {o.name for o in bpy.context.scene.objects}
     assert names == {"SOURCE", "LAYER_1", "LAYER_2", "DETECTOR"}, names
+
+
+@step("demo_in_domain")
+def _():
+    # optlab's validity domain: every plane-to-plane spacing must be below z_max
+    zmax = bench_io.z_max_m(N, PIX, WL)
+    assert abs(zmax - 0.02588) < 1e-4, zmax  # 25.9 mm for N=256
+    zs = [0.0, 0.02, 0.04, 0.06]
+    gaps = [c - a for a, c in zip(zs, zs[1:])]
+    assert max(gaps) < zmax, (gaps, zmax)
 
 
 @step("export")
@@ -73,8 +92,10 @@ def _():
     for k in ("wavelength_m", "grid", "source", "layers", "detector", "output"):
         assert k in b, k
     assert b["grid"]["n"] == N and b["grid"]["pixel_m"] == PIX
+    assert b["wavelength_m"] == WL, b["wavelength_m"]
     zs = [b["source"]["z_m"]] + [l["z_m"] for l in b["layers"]] + [b["detector"]["z_m"]]
     assert all(a < c for a, c in zip(zs, zs[1:])), zs
+    assert max(c - a for a, c in zip(zs, zs[1:])) < bench_io.z_max_m(N, PIX, WL), zs
     assert abs(zs[-1] - 0.06) < 1e-9
     for l in b["layers"]:
         for k in ("name", "n_medium", "n_material", "kappa", "height_npy", "height_max_m"):
@@ -231,16 +252,17 @@ def _():
 
 @step("parented_detector_z")
 def _():
-    # baja prioridad: z exportado con matrix_world cuando el detector tiene padre
+    # baja prioridad: z exportado con matrix_world cuando el detector tiene padre.
+    # Parent at -5 mm keeps the bench in-domain (detector at 55 mm, 15 mm past LAYER_2).
     bench_io.build_demo_bench(N, PIX, WL, (0.02, 0.04), 0.06, 0)
     par = bpy.data.objects.new("PARENT_EMPTY", None)
     bpy.context.scene.collection.objects.link(par)
-    par.location = (0, 0, 0.01)
+    par.location = (0, 0, -0.005)
     det = bpy.data.objects["DETECTOR"]
     det.parent = par
     path = bench_io.export_bench(OUT)
     b = json.load(open(path))
-    assert abs(b["detector"]["z_m"] - 0.07) < 1e-9, b["detector"]["z_m"]
+    assert abs(b["detector"]["z_m"] - 0.055) < 1e-9, b["detector"]["z_m"]
     det.parent = None
     bpy.data.objects.remove(par)
 
@@ -252,4 +274,6 @@ def _():
 
 
 print("SELFTEST_RESULTS " + json.dumps(results, indent=1))
+n_pass = sum(1 for v in results.values() if v == "PASS")
+print(f"SELFTEST_COUNT {n_pass}/{len(results)} PASS")
 sys.exit(1 if any(v.startswith("FAIL") for v in results.values()) else 0)
