@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Neuro3D Lab: Blender add-on for virtual optical neural network benches."""
 
 bl_info = {

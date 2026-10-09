@@ -1,11 +1,21 @@
-"""Banco optico declarativo (JSON "optlab.bench/1") y simulacion.
+# SPDX-License-Identifier: Apache-2.0
+"""Declarative optical bench (JSON "optlab.bench/1") and simulation.
 
-Fuente en z_m -> capas (elementos de fase delgados) -> detector. Las distancias
-son diferencias de z (estrictamente crecientes). Propagacion por espectro angular,
-exp(-i w t); t = exp(i 2 pi (n_mat-n_med) h/lambda) exp(-2 pi kappa h/lambda),
-h = height_npy * height_max_m. Rutas relativas a base_dir.
-medium_index (por defecto 1.0): indice del medio entre planos; la propagacion usa
-lambda/medium_index y todos los n_medium de las capas deben coincidir con el.
+The bench is a source plane at z_m, followed by layers (thin phase elements) and a
+detector plane. Distances are differences of consecutive z_m values, and the z_m
+values must be strictly increasing. Free-space propagation uses the angular-spectrum
+method with time dependence exp(-i*w*t). Each layer multiplies the field by
+
+    t = exp(i*2*pi*(n_mat - n_med)*h/lambda) * exp(-2*pi*kappa*h/lambda),
+    h = height_npy * height_max_m,
+
+where lambda = wavelength_m is the vacuum wavelength, n_mat + i*kappa is the complex
+index of the layer material, and n_med is the layer's n_medium. Relative paths are
+resolved against base_dir.
+
+medium_index (default 1.0) is the refractive index of the medium between the planes.
+Propagation uses wavelength_m / medium_index, and the n_medium of every layer must
+equal medium_index.
 """
 from __future__ import annotations
 
@@ -36,6 +46,7 @@ def _num(v, name, positive=False):
 
 
 def load_bench(path):
+    """Load a bench JSON file, validate it, and return the bench dictionary."""
     with open(path, "r", encoding="utf-8") as fh:
         return _validate(json.load(fh))
 
@@ -90,7 +101,7 @@ def _validate(b):
 
 
 def _propagation_segments(b):
-    """(label, length_m) for each free-space segment: source -> layer 1, ..., layer N -> detector."""
+    """Return (label, length_m) for each free-space segment: source -> layer 1, ..., layer N -> detector."""
     segments = []
     z, prev = b["source"]["z_m"], "source"
     for i, ly in enumerate(b.get("layers", [])):
@@ -103,18 +114,24 @@ def _propagation_segments(b):
 
 def simulate_bench(path_or_dict, base_dir=None, output_path=None, return_scores=False,
                    allow_out_of_domain=False):
-    """Devuelve la intensidad (n,n) en el detector; con return_scores=True
-    devuelve (I, {label: energia_en_region}).
+    """Return the intensity array I (n, n) at the detector.
 
-    Domain of validity: plain angular-spectrum propagation is reliable only while
-    every free-space segment (source -> layer 1, ..., layer N -> detector) has length
-    d < z_max = N * pixel_m**2 * n_medium / wavelength_m, where N is the grid size
-    and the wavelength in the medium is wavelength_m / medium_index. Beyond z_max,
-    aliasing invalidates the result (see docs/MODEL.md, section 2). A segment with
-    d >= z_max raises ValueError, naming the segment, its length and z_max. With
-    allow_out_of_domain=True, each such segment emits a warnings.warn with the same
-    information and the simulation continues; a result obtained that way is outside
-    the validity domain and must be reported as such.
+    With return_scores=True, return (I, {label: energy_in_region}). The energy of a
+    region is the unnormalized sum of I over the pixels whose centers lie inside it.
+    Keys are the region "label", or its index when no label is given. Region
+    coordinates (cx_m, cy_m, w_m, h_m) are in meters from the grid center, with +x to
+    the right and +y up. A region is the half-open rectangle
+    [cx_m - w_m/2, cx_m + w_m/2) x [cy_m - h_m/2, cy_m + h_m/2).
+
+    Validity domain: the angular-spectrum propagation is applied to free-space segments
+    only while their length d is below z_max = N * pixel_m**2 * n_medium / wavelength_m,
+    where N is the grid size and the wavelength in the medium is wavelength_m /
+    medium_index. This sampling-based criterion is the one checked below; it is not a
+    comparison with an independent solution. Unless allow_out_of_domain=True, a segment
+    with d >= z_max raises ValueError naming the segment, its length and z_max. With
+    allow_out_of_domain=True, each such segment instead emits a warnings.warn with the
+    same information and the simulation continues; the result then lies outside the
+    stated validity domain and must be reported as such.
     """
     if isinstance(path_or_dict, dict):
         b = _validate(path_or_dict)
@@ -138,8 +155,8 @@ def simulate_bench(path_or_dict, base_dir=None, output_path=None, return_scores=
     else:
         u = np.ones((n, n), dtype=complex)
     z = src["z_m"]
-    lam_med = lam / float(b.get("medium_index", 1.0))  # longitud de onda en el medio
-    z_max = n * px ** 2 / lam_med  # dominio de validez del espectro angular (ver docstring)
+    lam_med = lam / float(b.get("medium_index", 1.0))  # wavelength in the medium
+    z_max = n * px ** 2 / lam_med  # validity domain of the angular-spectrum propagation (see the docstring)
     problems = [
         f"propagation segment '{label}' has length {d:.6g} m >= z_max = {z_max:.6g} m "
         f"(z_max = N*pixel_m**2*n_medium/wavelength_m, N={n}): out of domain"

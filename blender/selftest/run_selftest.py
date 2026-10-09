@@ -1,9 +1,10 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Headless self-test of the Neuro3D Lab add-on, on the in-domain demo bench (N=256).
 
 Run from anywhere (no absolute paths):
   blender -b --factory-startup -P blender/selftest/run_selftest.py
-Output goes to <out>/selftest, where <out> is $NEURO3D_LAB_OUT, or the system temp
-dir plus neuro3d-lab when that variable is unset. Exit code 0 means every step PASS.
+Output goes to <out>/selftest, where <out> is $NEURO3D_LAB_OUT, or
+<repo parent>/.cognition/neuro3d-lab when that variable is unset. Exit code 0 means every step PASS.
 """
 import json
 import os

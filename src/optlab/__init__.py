@@ -1,4 +1,5 @@
-"""optlab: laboratorio optico (campo escalar, SI, exp(-i w t))."""
+# SPDX-License-Identifier: Apache-2.0
+"""optlab: optical simulation toolkit (scalar field, SI units, time dependence exp(-i*w*t))."""
 from .units import wavenumber, phase_from_opl, optical_path_length
 from .propagation import transfer_function, angular_spectrum, angular_spectrum_adjoint
 from .elements import phase_element, detector_masks
