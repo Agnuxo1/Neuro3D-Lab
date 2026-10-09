@@ -1,0 +1,34 @@
+{
+ "contract": "CONTRATO-002",
+ "control": "reversed propagation",
+ "rows": [
+  {
+   "z_over_zR": 0.25,
+   "direction": 1,
+   "gouy_error_rad": 1.0536899258006827e-05,
+   "threshold_rad": 0.005,
+   "fails_check": false
+  },
+  {
+   "z_over_zR": 0.25,
+   "direction": -1,
+   "gouy_error_rad": 0.48996786315364727,
+   "threshold_rad": 0.005,
+   "fails_check": true
+  },
+  {
+   "z_over_zR": 1.0,
+   "direction": 1,
+   "gouy_error_rad": 1.929286064239477e-09,
+   "threshold_rad": 0.005,
+   "fails_check": false
+  },
+  {
+   "z_over_zR": 1.0,
+   "direction": -1,
+   "gouy_error_rad": 1.5707963248626333,
+   "threshold_rad": 0.005,
+   "fails_check": true
+  }
+ ]
+}
