@@ -1,0 +1,6 @@
+Neuro3D-Lab
+Copyright 2026 Francisco Angulo de Lafuente
+
+This product includes software developed by the author for the optical neural network laboratory.
+The Blender add-on runs inside Blender 4.5 (GPL-3.0-or-later); Blender itself is not redistributed here.
+Numerical references: Lin et al. 2018 (doi:10.1126/science.aat8084); Matsushima & Shimobaba 2009 (Opt. Express 17, 19662); Clements et al. 2016 (doi:10.1364/OPTICA.3.001460).

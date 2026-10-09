@@ -3,6 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
+license = "Apache-2.0"
 name = "optlab"
 version = "0.1.0"
 description = "Optical lab: scalar-field propagation, Fresnel, MZI and diffractive neural networks"
