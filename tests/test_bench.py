@@ -1,5 +1,6 @@
 import copy
 import json
+import warnings
 import numpy as np
 import pytest
 from optlab import simulate_bench, load_bench
@@ -10,8 +11,9 @@ def make(tmp_path):
     n = 64
     np.save(tmp_path / "L1.npy", np.zeros((n, n)))
     np.save(tmp_path / "L2.npy", np.random.default_rng(0).uniform(0, 1, (n, n)))
+    # z_max = 64*(3e-5)^2/6.33e-7 ~ 91 mm; segments 20, 10 and 20 mm are in domain
     b = {"schema": "optlab.bench/1", "wavelength_m": 6.33e-7,
-         "grid": {"n": n, "pixel_m": 8e-6},
+         "grid": {"n": n, "pixel_m": 3e-5},
          "source": {"z_m": 0.0},
          "layers": [
              {"name": "L1", "z_m": 0.02, "n_medium": 1.0, "n_material": 1.5, "kappa": 0.0,
@@ -68,8 +70,9 @@ def test_medium_index_changes_propagation(tmp_path):
     n = 64
     _structured_source(tmp_path, n)
     np.save(tmp_path / "L1.npy", np.zeros((n, n)))
+    px = 3e-5  # z_max ~ 91 mm (vacuum) and ~ 137 mm (n=1.5); segments are 10 mm
     base = {"schema": "optlab.bench/1", "wavelength_m": 6.33e-7,
-            "grid": {"n": n, "pixel_m": 8e-6},
+            "grid": {"n": n, "pixel_m": px},
             "source": {"z_m": 0.0, "amplitude_npy": "src.npy"},
             "layers": [{"name": "L1", "z_m": 0.01, "n_medium": 1.0, "n_material": 1.0,
                         "kappa": 0.0, "height_npy": "L1.npy", "height_max_m": 1e-6}],
@@ -82,7 +85,7 @@ def test_medium_index_changes_propagation(tmp_path):
     I_med = simulate_bench(med, base_dir=tmp_path)
     assert np.linalg.norm(I_med - I_vac) / np.linalg.norm(I_vac) > 1e-3
     u0 = np.load(tmp_path / "src.npy").astype(complex)
-    ref = np.abs(angular_spectrum(u0, 8e-6, 6.33e-7 / 1.5, 0.02)) ** 2
+    ref = np.abs(angular_spectrum(u0, px, 6.33e-7 / 1.5, 0.02)) ** 2
     assert np.abs(I_med - ref).max() < 1e-9 * ref.max()
 
 
@@ -116,11 +119,41 @@ def test_evanescent_components_dropped(tmp_path):
     n = 32
     ii, jj = np.indices((n, n))
     np.save(tmp_path / "chk.npy", ((ii + jj) % 2).astype(float))
+    # z_max = 32*(1e-7)^2/6.33e-7 ~ 0.51 um; z = 0.4 um keeps the evanescent decay exp(-4.3e7*z) ~ 3e-8
     b = {"schema": "optlab.bench/1", "wavelength_m": 6.33e-7,
          "grid": {"n": n, "pixel_m": 1e-7},
          "source": {"z_m": 0.0, "amplitude_npy": "chk.npy"},
-         "layers": [], "detector": {"z_m": 1e-5, "regions": []}}
+         "layers": [], "detector": {"z_m": 4e-7, "regions": []}}
     I = simulate_bench(b, base_dir=tmp_path)
     mean_free = (0.5 ** 2) * n * n  # energia del termino de frecuencia cero propagante
     assert I.sum() < 1.05 * mean_free  # el patron alterno (evanescente) no aporta
     assert I.std() < 1e-6 * I.mean()  # solo queda la componente uniforme
+
+
+def _far_detector(b):
+    # only the layer 2 -> detector segment (0.17 m) exceeds z_max ~ 91 mm
+    bad = copy.deepcopy(b)
+    bad["detector"]["z_m"] = 0.2
+    return bad
+
+
+def test_out_of_domain_raises_by_default(tmp_path):
+    bad = _far_detector(make(tmp_path))
+    with pytest.raises(ValueError, match=r"L2 -> detector.*z_max"):
+        simulate_bench(bad, base_dir=tmp_path)
+
+
+def test_out_of_domain_allowed_warns(tmp_path):
+    bad = _far_detector(make(tmp_path))
+    with pytest.warns(UserWarning, match=r"L2 -> detector.*z_max"):
+        I = simulate_bench(bad, base_dir=tmp_path, allow_out_of_domain=True)
+    assert I.shape == (64, 64) and np.isfinite(I).all()
+
+
+def test_in_domain_no_warning(tmp_path):
+    b = make(tmp_path)
+    with warnings.catch_warnings(record=True) as rec:
+        warnings.simplefilter("always")
+        I = simulate_bench(b, base_dir=tmp_path)
+    assert I.shape == (64, 64) and np.isfinite(I).all()
+    assert len(rec) == 0, [str(w.message) for w in rec]

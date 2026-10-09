@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import os
+import warnings
 
 import numpy as np
 
@@ -88,9 +89,33 @@ def _validate(b):
     return b
 
 
-def simulate_bench(path_or_dict, base_dir=None, output_path=None, return_scores=False):
+def _propagation_segments(b):
+    """(label, length_m) for each free-space segment: source -> layer 1, ..., layer N -> detector."""
+    segments = []
+    z, prev = b["source"]["z_m"], "source"
+    for i, ly in enumerate(b.get("layers", [])):
+        name = ly.get("name", f"layers[{i}]")
+        segments.append((f"{prev} -> {name}", ly["z_m"] - z))
+        z, prev = ly["z_m"], name
+    segments.append((f"{prev} -> detector", b["detector"]["z_m"] - z))
+    return segments
+
+
+def simulate_bench(path_or_dict, base_dir=None, output_path=None, return_scores=False,
+                   allow_out_of_domain=False):
     """Devuelve la intensidad (n,n) en el detector; con return_scores=True
-    devuelve (I, {label: energia_en_region})."""
+    devuelve (I, {label: energia_en_region}).
+
+    Domain of validity: plain angular-spectrum propagation is reliable only while
+    every free-space segment (source -> layer 1, ..., layer N -> detector) has length
+    d < z_max = N * pixel_m**2 * n_medium / wavelength_m, where N is the grid size
+    and the wavelength in the medium is wavelength_m / medium_index. Beyond z_max,
+    aliasing invalidates the result (see docs/MODEL.md, section 2). A segment with
+    d >= z_max raises ValueError, naming the segment, its length and z_max. With
+    allow_out_of_domain=True, each such segment emits a warnings.warn with the same
+    information and the simulation continues; a result obtained that way is outside
+    the validity domain and must be reported as such.
+    """
     if isinstance(path_or_dict, dict):
         b = _validate(path_or_dict)
     else:
@@ -114,6 +139,16 @@ def simulate_bench(path_or_dict, base_dir=None, output_path=None, return_scores=
         u = np.ones((n, n), dtype=complex)
     z = src["z_m"]
     lam_med = lam / float(b.get("medium_index", 1.0))  # longitud de onda en el medio
+    z_max = n * px ** 2 / lam_med  # dominio de validez del espectro angular (ver docstring)
+    problems = [
+        f"propagation segment '{label}' has length {d:.6g} m >= z_max = {z_max:.6g} m "
+        f"(z_max = N*pixel_m**2*n_medium/wavelength_m, N={n}): out of domain"
+        for label, d in _propagation_segments(b) if d >= z_max
+    ]
+    if problems and not allow_out_of_domain:
+        raise ValueError("; ".join(problems))
+    for msg in problems:
+        warnings.warn(msg, stacklevel=2)
     for ly in b.get("layers", []):
         u = angular_spectrum(u, px, lam_med, ly["z_m"] - z)
         z = ly["z_m"]
