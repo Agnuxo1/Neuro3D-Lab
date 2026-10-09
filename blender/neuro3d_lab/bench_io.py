@@ -10,6 +10,7 @@ scene.unit_settings.scale_length (metres = BU * scale_length).
 """
 import json
 import os
+import tempfile
 
 import bpy
 import numpy as np
@@ -19,6 +20,32 @@ SCHEMA = "optlab.bench/1"
 SCALE_PROP = "optlab_intensity_scale"
 HEIGHT_IMG_PROP = "optlab_height_image"
 EPS_BU = 1e-4
+
+# No absolute paths anywhere: everything is derived from this file's location.
+# This file is <repo>/blender/neuro3d_lab/bench_io.py.
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+OPTLAB_SRC = os.path.join(REPO_ROOT, "src")
+
+# In-domain demo bench. optlab's validity domain is plane spacing < z_max = N*pixel^2*n/lambda.
+# For N=256, pixel 8 um, lambda 633 nm: z_max = 25.9 mm; the plane spacing is 20 mm.
+DEMO_N = 256
+DEMO_PIXEL_M = 8e-6
+DEMO_WAVELENGTH_M = 6.33e-7
+DEMO_LAYER_Z_M = (0.02, 0.04)
+DEMO_DETECTOR_Z_M = 0.06
+
+
+def out_root():
+    """Output root: $NEURO3D_LAB_OUT if set, else <system temp dir>/neuro3d-lab."""
+    env = os.environ.get("NEURO3D_LAB_OUT", "").strip()
+    if env:
+        return os.path.abspath(env)
+    return os.path.join(tempfile.gettempdir(), "neuro3d-lab")
+
+
+def z_max_m(n, pixel_m, wavelength_m, medium_index=1.0):
+    """Largest plane-to-plane distance (m) inside optlab's validity domain."""
+    return n * pixel_m ** 2 * medium_index / wavelength_m
 
 
 def _scale(scene=None):
@@ -96,9 +123,13 @@ def _image_to_array(img):
     return np.flipud(px.reshape(h, w, 4)[:, :, 0]).copy()
 
 
-def build_demo_bench(n=64, pixel_m=8e-6, wavelength_m=6.33e-7,
-                     layer_z_list=(0.02, 0.04), detector_z_m=0.06, seed=0):
-    """Create SOURCE, LAYER_k and DETECTOR planes in the current scene."""
+def build_demo_bench(n=DEMO_N, pixel_m=DEMO_PIXEL_M, wavelength_m=DEMO_WAVELENGTH_M,
+                     layer_z_list=DEMO_LAYER_Z_M, detector_z_m=DEMO_DETECTOR_Z_M, seed=0):
+    """Create SOURCE, LAYER_k and DETECTOR planes in the current scene.
+
+    The defaults are the in-domain demo. Plane spacings must stay below
+    z_max_m(n, pixel_m, wavelength_m); the self-test checks the demo against it.
+    """
     clear_bench()
     scene = bpy.context.scene
     sc = _scale(scene)

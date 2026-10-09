@@ -9,7 +9,7 @@ from bpy.props import FloatProperty, IntProperty, StringProperty
 
 from . import bench_io
 
-DEFAULT_OUT = "D:/PROJECTS/.cognition/neuro3d-lab/bench"
+DEFAULT_OUT = os.path.join(bench_io.out_root(), "bench")  # $NEURO3D_LAB_OUT or temp dir
 
 
 def _out_dir(scene):
@@ -26,7 +26,7 @@ class OPTLAB_OT_build_demo_bench(bpy.types.Operator):
         s = context.scene
         try:
             bench_io.build_demo_bench(s.optlab_grid_n, s.optlab_pixel_m, s.optlab_wavelength_m,
-                                      (0.02, 0.04), 0.06, 0)
+                                      bench_io.DEMO_LAYER_Z_M, bench_io.DEMO_DETECTOR_Z_M, 0)
         except Exception as exc:  # report instead of raising into the UI
             self.report({"ERROR"}, f"Build failed: {exc}")
             return {"CANCELLED"}
@@ -127,13 +127,15 @@ _CLASSES = (OPTLAB_OT_build_demo_bench, OPTLAB_OT_export_bench,
             OPTLAB_OT_import_intensity, OPTLAB_OT_run_bench, OPTLAB_PT_panel)
 
 _PROPS = {
-    "optlab_grid_n": IntProperty(name="Grid N", default=64, min=8, max=4096),
-    "optlab_pixel_m": FloatProperty(name="Pixel (m)", default=8e-6, min=1e-9, precision=9),
-    "optlab_wavelength_m": FloatProperty(name="Wavelength (m)", default=6.33e-7, min=1e-9, precision=9),
+    "optlab_grid_n": IntProperty(name="Grid N", default=bench_io.DEMO_N, min=8, max=4096),
+    "optlab_pixel_m": FloatProperty(name="Pixel (m)", default=bench_io.DEMO_PIXEL_M,
+                                    min=1e-9, precision=9),
+    "optlab_wavelength_m": FloatProperty(name="Wavelength (m)", default=bench_io.DEMO_WAVELENGTH_M,
+                                         min=1e-9, precision=9),
     "optlab_output_dir": StringProperty(name="Output dir", default=DEFAULT_OUT, subtype="DIR_PATH"),
     "optlab_intensity_path": StringProperty(name="Intensity .npy", default="", subtype="FILE_PATH"),
     "optlab_src_path": StringProperty(name="optlab src path",
-                                      default="D:/PROJECTS/Neuro3D-Lab/src", subtype="DIR_PATH"),
+                                      default=bench_io.OPTLAB_SRC, subtype="DIR_PATH"),
 }
 
 

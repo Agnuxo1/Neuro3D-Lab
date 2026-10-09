@@ -1,40 +1,100 @@
-"""Render an orbit of the demo bench with the optlab intensity on the DETECTOR.
-Run: blender -b --factory-startup -P blender/render_bench_gif.py
-Blender only visualises; the physics (simulate_bench) is computed by optlab."""
+"""Render an orbit of the in-domain demo bench (N=256) with the optlab intensity on the
+DETECTOR, then assemble the frames into docs/img/blender_bench.gif.
+
+Two steps, both run from the repository (no absolute paths):
+  1. blender -b --factory-startup -P blender/render_bench_gif.py
+       renders the PNG frames (Blender's bundled Python has no Pillow).
+  2. python blender/render_bench_gif.py --gif
+       assembles the frames into docs/img/blender_bench.gif with Pillow.
+Frames go to <out>/render/frames, where <out> is $NEURO3D_LAB_OUT, or the system temp
+dir plus neuro3d-lab when that variable is unset.
+
+Blender only visualises; the physics (simulate_bench) is computed by optlab.
+
+Scale, stated honestly: the bench is physical in z (planes 0, 20, 40 and 60 mm, so the
+spacing is 20 mm) and the pixel is physical (8 um). The planes are NOT drawn to scale in
+x and y: each plane is magnified VIS_XY_SCALE = 15 times in x and y for visualization,
+so a 2.048 mm plane is drawn about 31 mm wide, the same width as in the earlier GIF.
+The image is a schematic, not a to-scale picture of the optics.
+"""
+import glob
 import math
 import os
 import sys
+import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-sys.path.insert(0, HERE)
-sys.path.insert(0, os.path.join(ROOT, "src"))
+_env_out = os.environ.get("NEURO3D_LAB_OUT", "").strip()
+OUT_ROOT = os.path.abspath(_env_out) if _env_out else os.path.join(tempfile.gettempdir(), "neuro3d-lab")
+FRAMES = os.path.join(OUT_ROOT, "render", "frames")
+GIF = os.path.join(ROOT, "docs", "img", "blender_bench.gif")
+NFRAMES = 36
+VIS_XY_SCALE = 15.0          # visual enlargement of the physical planes (x, y only)
+GIF_MS_PER_FRAME = 90
+GIF_MAX_BYTES = 2 * 1024 * 1024
 
+
+def assemble_gif():
+    """Frames -> GIF with Pillow. Run with a plain Python that has Pillow installed."""
+    from PIL import Image
+
+    files = sorted(glob.glob(os.path.join(FRAMES, "f[0-9][0-9][0-9].png")))
+    if len(files) < 20:
+        raise SystemExit(f"need at least 20 frames in {FRAMES}, found {len(files)}")
+    # one shared palette (from a sample of frames) so the colours do not flicker between frames
+    picks = [Image.open(p).convert("RGB") for p in files[:: max(1, len(files) // 6)]]
+    w, h = picks[0].size
+    sheet = Image.new("RGB", (w, h * len(picks)))
+    for i, im in enumerate(picks):
+        sheet.paste(im, (0, i * h))
+    palette = sheet.quantize(colors=256, method=Image.Quantize.MEDIANCUT)
+    frames = []
+    for p in files:
+        with Image.open(p) as im:
+            frames.append(im.convert("RGB").quantize(palette=palette, dither=Image.Dither.FLOYDSTEINBERG))
+    os.makedirs(os.path.dirname(GIF), exist_ok=True)
+    frames[0].save(GIF, save_all=True, append_images=frames[1:], duration=GIF_MS_PER_FRAME,
+                   loop=0, optimize=True)
+    size = os.path.getsize(GIF)
+    print(f"GIF {GIF}: {len(frames)} frames, {size} bytes")
+    if size > GIF_MAX_BYTES:
+        raise SystemExit(f"GIF is {size} bytes, above the 2 MB limit")
+
+
+if "--gif" in sys.argv:
+    assemble_gif()
+    sys.exit(0)
+
+# ---- Blender side: render the frames -------------------------------------------------
 import bpy  # noqa: E402
 import numpy as np  # noqa: E402
-from mathutils import Vector  # noqa: E402
+
+sys.path.insert(0, HERE)
+sys.path.insert(0, os.path.join(ROOT, "src"))
 
 from neuro3d_lab import bench_io  # noqa: E402
 from optlab.bench import simulate_bench  # noqa: E402
 
-RENDER = "D:/PROJECTS/.cognition/neuro3d-lab/render"
-FRAMES = RENDER + "/frames"
-GIF = os.path.join(ROOT, "docs", "img", "blender_bench.gif")
-N, PIX, WL = 64, 8e-6, 6.33e-7
-NFRAMES, XY_SCALE = 36, 60.0   # visual enlargement of the 0.5 mm planes (x,y only)
+N, PIX, WL = bench_io.DEMO_N, bench_io.DEMO_PIXEL_M, bench_io.DEMO_WAVELENGTH_M
+Z_LAYERS, Z_DET = bench_io.DEMO_LAYER_Z_M, bench_io.DEMO_DETECTOR_Z_M
+RENDER = os.path.dirname(FRAMES)
 os.makedirs(FRAMES, exist_ok=True)
+for _old in glob.glob(os.path.join(FRAMES, "f*.png")):
+    os.remove(_old)
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
-bench_io.build_demo_bench(N, PIX, WL, (0.02, 0.04), 0.06, 0)
+bench_io.build_demo_bench(N, PIX, WL, Z_LAYERS, Z_DET, 0)
 bench_io.export_bench(RENDER)
 inten = np.asarray(simulate_bench(os.path.join(RENDER, "bench.json")))
+assert inten.shape == (N, N) and np.isfinite(inten).all() and inten.max() > 0
 np.save(os.path.join(RENDER, "detector_intensity.npy"), inten)
 print("intensity", inten.shape, float(inten.min()), float(inten.max()))
 bench_io.import_intensity(os.path.join(RENDER, "detector_intensity.npy"))
 
 objs = bpy.data.objects
 for o in objs:
-    o.scale = (XY_SCALE, XY_SCALE, 1.0)
+    o.scale = (VIS_XY_SCALE, VIS_XY_SCALE, 1.0)
 
 
 def mat(name, build):
@@ -80,10 +140,10 @@ def src_build(nt, out):
     nt.links.new(emi.outputs[0], out.inputs["Surface"])
 objs["SOURCE"].data.materials.clear(); objs["SOURCE"].data.materials.append(mat("SRC_mat", src_build))
 
-# optical axis line
+# optical axis line (not magnified: it is a 0.5 mm guide, drawn on the z axis)
 cu = bpy.data.curves.new("axis", "CURVE"); cu.dimensions = "3D"
 sp = cu.splines.new("POLY"); sp.points.add(1)
-sp.points[0].co = (0, 0, 0, 1); sp.points[1].co = (0, 0, 0.06, 1)
+sp.points[0].co = (0, 0, 0, 1); sp.points[1].co = (0, 0, Z_DET, 1)
 cu.bevel_depth = 0.00025
 axis = bpy.data.objects.new("AXIS", cu); bpy.context.scene.collection.objects.link(axis)
 axis.data.materials.append(mat("AXIS_mat", lambda nt, out: (
@@ -122,7 +182,7 @@ for f in range(NFRAMES):
     el = EL0 + math.radians(6) * math.sin(2 * math.pi * f / NFRAMES)
     cam.location = (R * math.cos(el) * math.sin(a), -R * math.cos(el) * math.cos(a), 0.03 + R * math.sin(el))
     bpy.context.view_layer.update()
-    scene.render.filepath = f"{FRAMES}/f{f:03d}.png"
+    scene.render.filepath = os.path.join(FRAMES, f"f{f:03d}.png")
     bpy.ops.render.render(write_still=True)
     print("frame", f, flush=True)
-print("RENDER_DONE")
+print("RENDER_DONE frames in", FRAMES, "- next: python blender/render_bench_gif.py --gif")
