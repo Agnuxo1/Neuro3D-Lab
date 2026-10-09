@@ -27,10 +27,15 @@
 
 ## T3: pixel convergence, D2NN input
 
-- Same physical digit (25.6 mm wide). Compare dx = 0.4 mm (N = 128) against dx = 0.2 mm (N = 256, same physical window, digit upsampled to the same physical size).
-- The dx = 0.2 mm intensity is block-averaged 2×2 to the dx = 0.4 mm grid before comparing.
+- Same physical digit (25.6 mm wide), same physical window of 102.4 mm, both grids inside the validity domain.
+- Reference: dx = 0.4 mm, N = 256 (validity limit 54.6 mm). Fine: dx = 0.2 mm, N = 512 (validity limit 27.3 mm). The digit is upsampled to the same physical size on both grids.
+- The fine intensity is block-averaged 2×2 to dx = 0.4 mm. Both are compared on the central 51.2 mm (128×128 coarse pixels) so that only the pixel size differs.
 - Metric: relative L2 difference of intensity.
 - **Threshold:** ≤ 0.05.
+
+### Amendment 1 (dated 2026-10-10, before any execution)
+
+The first draft of T3 used N = 256 with dx = 0.2 mm (window 51.2 mm). Its validity limit is N·dx²/λ = 13.7 mm, below the 18 mm propagation distance, so that comparison would have run outside the stated domain. The design above replaces it. The thresholds are unchanged, and no result had been computed when this amendment was made.
 
 ## What is not claimed by this contract
 
