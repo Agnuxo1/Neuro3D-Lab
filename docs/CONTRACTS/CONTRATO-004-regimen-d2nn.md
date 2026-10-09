@@ -45,4 +45,21 @@ The first draft of T3 used N = 256 with dx = 0.2 mm (window 51.2 mm). Its validi
 
 ## Result registry
 
-Filled in after running `experiments/run_regime_d2nn.py`. Each entry: local date, commit, measured values, verdict per test.
+Run: `python experiments/run_regime_d2nn.py` (about 8 s on CPU), commit `15ce4f0`, date 2026-10-10.
+
+| Test | Pre-registered metric | Measured | Threshold | Verdict |
+|---|---|---|---|---|
+| T1 | max relative error over k = 0…63 | 3.7·10⁻¹⁴ (worst k = 63, sin θ = 0.923) | ≤ 1·10⁻¹⁰ | **pass** |
+| T2 | relative L2 of intensity, N = 128 vs N = 256 at 18 mm | 4.41·10⁻² | ≤ 2·10⁻² | **fail** |
+| T3 | relative L2 of intensity, block mean (as written) | 3.04 | ≤ 5·10⁻² | **fail** (specification error, see below) |
+
+**Interpretation.**
+- T1 confirms that the implementation reproduces the exact plane-wave solution at every frequency the D2NN grid can represent. It tests the implementation, not the physics model.
+- T2 is a real finding. Periodic wrap-around in the N = 128 grid used by CONTRATO-003 changes the intensity at the detector by about 4 % (relative L2) compared with N = 256. The D2NN results must therefore be checked with a larger grid before they are cited. This is an open item, not a settled result.
+- T3 failed because of the wording of the contract. "Block-averaged" is wrong for fields normalised to unit energy per grid: a coarse pixel holds the **sum** of its four fine pixels, and the mean differs from it by a factor of 4, which gives the value 3.04. This was an error in my own pre-registration.
+
+**Exploratory, post hoc (not a verdict).** After the pre-registered value was observed, the same comparison was recomputed with block sums (energy-conserving). The relative L2 is 2.85·10⁻², which would be below the threshold. This value was computed after seeing the result and is reported only as exploratory. The pre-registered verdict for T3 remains **fail**.
+
+**Consequences.**
+1. CONTRATO-003 uses N = 128. A robustness rerun of its final configuration at N = 256 is required before the D2NN numbers are cited (gap G02). It will be labelled post hoc.
+2. The pre-registered T3 cannot be rerun with corrected wording without starting a new contract. This contract remains a record of what was measured.
