@@ -1,17 +1,33 @@
 [build-system]
-requires = ["setuptools>=68"]
+# setuptools>=77 is required for the SPDX string form of `license` (PEP 639).
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
-license = "Apache-2.0"
 name = "optlab"
 version = "0.1.0"
 description = "Optical lab: scalar-field propagation, Fresnel, MZI and diffractive neural networks"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "Francisco Angulo de Lafuente" }]
+keywords = ["optics", "angular spectrum", "fresnel diffraction", "diffractive neural network", "interferometer"]
 requires-python = ">=3.10"
+# Lower bounds only; pip installs current releases (Python 3.13 wheels) by default.
 dependencies = ["numpy>=1.26", "scipy>=1.11"]
 
 [project.optional-dependencies]
-dev = ["pytest"]
+# Test suite.
+dev = ["pytest>=8"]
+# Digit-classification experiment (run_d2nn_digits.py).
+experiments = ["scikit-learn>=1.3"]
+# Figure generation (docs/figures/make_figures.py).
+figures = ["matplotlib>=3.8", "pillow>=10", "scikit-learn>=1.3"]
+
+[project.urls]
+Homepage = "https://github.com/Agnuxo1/Neuro3D-Lab"
+Repository = "https://github.com/Agnuxo1/Neuro3D-Lab"
+Issues = "https://github.com/Agnuxo1/Neuro3D-Lab/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]

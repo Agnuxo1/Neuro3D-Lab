@@ -5,13 +5,15 @@ y E4 (exploratorio: dominio de validez). Los umbrales son los del contrato y no 
 
 Uso: python experiments/run_validation.py
 Salida: resumen en experiments/results/validation_summary.json (pequeño, versionado) y
-datos completos en D:/PROJECTS/.cognition/neuro3d-lab/results/validation.json (no versionado).
+datos completos en $NEURO3D_LAB_OUT/results/validation.json (no versionado).
 """
 from __future__ import annotations
 
 import json
 import math
+import os
 import sys
+import tempfile
 from pathlib import Path
 
 import numpy as np
@@ -22,7 +24,10 @@ sys.path.insert(0, str(ROOT / "src"))
 from optlab.propagation import angular_spectrum  # noqa: E402
 
 LAM = 633e-9
-OUT_LOCAL = Path("D:/PROJECTS/.cognition/neuro3d-lab/results")
+# Full data goes outside the repo. NEURO3D_LAB_OUT selects the base folder; the default
+# matches the Blender add-on: <system temp>/neuro3d-lab.
+_OUT_BASE = os.environ.get("NEURO3D_LAB_OUT") or str(Path(tempfile.gettempdir()) / "neuro3d-lab")
+OUT_LOCAL = Path(_OUT_BASE) / "results"
 OUT_REPO = ROOT / "experiments" / "results"
 
 

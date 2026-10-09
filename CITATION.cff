@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Neuro3D-Lab"
+type: software
+abstract: "Virtual optical laboratory: scalar-field propagation, Fresnel diffraction, interferometers and diffractive neural networks (optlab), with a Blender add-on front end."
+version: 0.1.0
+license: Apache-2.0
+authors:
+  - family-names: "Angulo de Lafuente"
+    given-names: "Francisco"
+repository-code: "https://github.com/Agnuxo1/Neuro3D-Lab"
+keywords:
+  - optics
+  - diffraction
+  - angular spectrum
+  - diffractive neural networks
+  - Blender

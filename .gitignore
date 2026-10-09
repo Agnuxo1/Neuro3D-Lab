@@ -2,11 +2,31 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
-runs/*.jsonl
-*.npy
-*.npz
-.venv/
+.pytest_tmp/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.tox/
+.ipynb_checkpoints/
+
+# Virtual environments (any name, including venv-ci)
 venv/
+venv*/
+.venv/
+.venv*/
+
+# Build output
 build/
 dist/
-.pytest_tmp/
+
+# Run outputs: bench logs and scratch results stay local
+runs/
+*.npy
+*.npz
+
+# Blender backups and OS files
+*.blend1
+Thumbs.db
+desktop.ini
+.DS_Store

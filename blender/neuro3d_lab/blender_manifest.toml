@@ -1,0 +1,22 @@
+# Blender extension manifest (extensions format, Blender 4.2+).
+schema_version = "1.0.0"
+
+id = "neuro3d_lab"
+version = "0.1.0"
+name = "Neuro3D Lab"
+tagline = "Virtual optical bench for diffractive optical neural networks"
+maintainer = "Francisco Angulo de Lafuente"
+type = "add-on"
+website = "https://github.com/Agnuxo1/Neuro3D-Lab"
+tags = ["3D View", "Import-Export"]
+blender_version_min = "4.2.0"
+
+# License under review: the official extensions catalogue requires
+# GPL-3.0-or-later for add-ons. The repository is Apache-2.0 (see LICENSE).
+license = [
+  "SPDX:GPL-3.0-or-later",
+]
+
+# Each permission is a table key whose value is the justification shown to users.
+[permissions]
+files = "Save bench files (optlab.bench/1) to a user-chosen path"
