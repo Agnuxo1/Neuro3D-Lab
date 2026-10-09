@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Operators, scene properties and N-panel for Neuro3D Lab."""
 import importlib
 import os
@@ -9,7 +10,7 @@ from bpy.props import FloatProperty, IntProperty, StringProperty
 
 from . import bench_io
 
-DEFAULT_OUT = os.path.join(bench_io.out_root(), "bench")  # $NEURO3D_LAB_OUT or temp dir
+DEFAULT_OUT = os.path.join(bench_io.out_root(), "bench")  # $NEURO3D_LAB_OUT or <repo parent>/.cognition/neuro3d-lab
 
 
 def _out_dir(scene):

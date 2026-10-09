@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Render an orbit of the in-domain demo bench (N=256) with the optlab intensity on the
 DETECTOR, then assemble the frames into docs/img/blender_bench.gif.
 
@@ -6,8 +7,8 @@ Two steps, both run from the repository (no absolute paths):
        renders the PNG frames (Blender's bundled Python has no Pillow).
   2. python blender/render_bench_gif.py --gif
        assembles the frames into docs/img/blender_bench.gif with Pillow.
-Frames go to <out>/render/frames, where <out> is $NEURO3D_LAB_OUT, or the system temp
-dir plus neuro3d-lab when that variable is unset.
+Frames go to <out>/render/frames, where <out> is $NEURO3D_LAB_OUT, or
+<repo parent>/.cognition/neuro3d-lab when that variable is unset.
 
 Blender only visualises; the physics (simulate_bench) is computed by optlab.
 
@@ -21,12 +22,13 @@ import glob
 import math
 import os
 import sys
-import tempfile
+from pathlib import Path
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 _env_out = os.environ.get("NEURO3D_LAB_OUT", "").strip()
-OUT_ROOT = os.path.abspath(_env_out) if _env_out else os.path.join(tempfile.gettempdir(), "neuro3d-lab")
+OUT_ROOT = (os.path.abspath(_env_out) if _env_out
+            else str(Path(__file__).resolve().parents[2] / ".cognition" / "neuro3d-lab"))
 FRAMES = os.path.join(OUT_ROOT, "render", "frames")
 GIF = os.path.join(ROOT, "docs", "img", "blender_bench.gif")
 NFRAMES = 36

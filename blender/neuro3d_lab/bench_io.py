@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Bench scene building, export (optlab.bench/1), intensity import and ray tracing.
 
 Image orientation convention (fixed, used everywhere):
@@ -10,7 +11,7 @@ scene.unit_settings.scale_length (metres = BU * scale_length).
 """
 import json
 import os
-import tempfile
+from pathlib import Path
 
 import bpy
 import numpy as np
@@ -36,11 +37,11 @@ DEMO_DETECTOR_Z_M = 0.06
 
 
 def out_root():
-    """Output root: $NEURO3D_LAB_OUT if set, else <system temp dir>/neuro3d-lab."""
+    """Output root: $NEURO3D_LAB_OUT if set, else <repo parent>/.cognition/neuro3d-lab."""
     env = os.environ.get("NEURO3D_LAB_OUT", "").strip()
     if env:
         return os.path.abspath(env)
-    return os.path.join(tempfile.gettempdir(), "neuro3d-lab")
+    return str(Path(__file__).resolve().parents[3] / ".cognition" / "neuro3d-lab")
 
 
 def z_max_m(n, pixel_m, wavelength_m, medium_index=1.0):

@@ -1,6 +1,12 @@
 Neuro3D-Lab
 Copyright 2026 Francisco Angulo de Lafuente
 
+Licences
+  Core library (src/optlab/): Apache License 2.0. Full text: LICENSE.
+  Blender add-on (blender/): GNU General Public License v3.0 or later (GPL-3.0-or-later).
+  Full text: blender/neuro3d_lab/LICENSE.
+  Blender itself is not redistributed in this repository. The add-on runs inside a separately
+  installed Blender 4.5.
+
 This product includes software developed by the author for the optical neural network laboratory.
-The Blender add-on runs inside Blender 4.5 (GPL-3.0-or-later); Blender itself is not redistributed here.
 Numerical references: Lin et al. 2018 (doi:10.1126/science.aat8084); Matsushima & Shimobaba 2009 (Opt. Express 17, 19662); Clements et al. 2016 (doi:10.1364/OPTICA.3.001460).

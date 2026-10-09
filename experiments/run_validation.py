@@ -13,7 +13,6 @@ import json
 import math
 import os
 import sys
-import tempfile
 from pathlib import Path
 
 import numpy as np
@@ -24,9 +23,10 @@ sys.path.insert(0, str(ROOT / "src"))
 from optlab.propagation import angular_spectrum  # noqa: E402
 
 LAM = 633e-9
-# Full data goes outside the repo. NEURO3D_LAB_OUT selects the base folder; the default
-# matches the Blender add-on: <system temp>/neuro3d-lab.
-_OUT_BASE = os.environ.get("NEURO3D_LAB_OUT") or str(Path(tempfile.gettempdir()) / "neuro3d-lab")
+# Full data goes outside the repo. NEURO3D_LAB_OUT selects the base folder; the default is
+# <repo parent>/.cognition/neuro3d-lab, the same as the Blender add-on.
+_OUT_BASE = (os.environ.get("NEURO3D_LAB_OUT")
+             or str(Path(__file__).resolve().parents[2] / ".cognition" / "neuro3d-lab"))
 OUT_LOCAL = Path(_OUT_BASE) / "results"
 OUT_REPO = ROOT / "experiments" / "results"
 

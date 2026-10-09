@@ -5,14 +5,13 @@ using the amended design. Thresholds are the ones fixed in the contract and are 
 
 Usage: python experiments/run_regime_d2nn.py
 Output: experiments/results/regime_d2nn_summary.json (small, versioned) and the full record in
-$NEURO3D_LAB_OUT/results (default: <system temp>/neuro3d-lab/results).
+$NEURO3D_LAB_OUT/results (default: <repo parent>/.cognition/neuro3d-lab/results).
 """
 from __future__ import annotations
 
 import json
 import os
 import sys
-import tempfile
 from pathlib import Path
 
 import numpy as np
@@ -27,7 +26,8 @@ LAM = 0.75e-3          # wavelength [m]
 D = 18e-3              # propagation distance [m]
 DIGIT_SIZE = 25.6e-3   # physical width of the upsampled digit [m]
 OUT_REPO = ROOT / "experiments" / "results"
-OUT_LOCAL = Path(os.environ.get("NEURO3D_LAB_OUT", Path(tempfile.gettempdir()) / "neuro3d-lab")) / "results"
+OUT_LOCAL = Path(os.environ.get("NEURO3D_LAB_OUT")
+                 or Path(__file__).resolve().parents[2] / ".cognition" / "neuro3d-lab") / "results"
 
 
 def encode(img8, n, dx):

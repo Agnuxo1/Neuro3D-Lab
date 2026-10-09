@@ -11,8 +11,8 @@ website = "https://github.com/Agnuxo1/Neuro3D-Lab"
 tags = ["3D View", "Import-Export"]
 blender_version_min = "4.2.0"
 
-# License under review: the official extensions catalogue requires
-# GPL-3.0-or-later for add-ons. The repository is Apache-2.0 (see LICENSE).
+# License: GPL-3.0-or-later. The official extensions catalogue requires GPL-3.0-or-later
+# for add-ons. The core library optlab is Apache-2.0 (see the repository LICENSE).
 license = [
   "SPDX:GPL-3.0-or-later",
 ]
