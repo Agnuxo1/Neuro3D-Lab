@@ -43,6 +43,17 @@ Base de comparación (H2): regresión logística de scikit-learn sobre la entrad
 
 Intervalos: Wilson al 95 % para cada precisión TEST.
 
+## Aclaraciones fijadas antes de ejecutar (addendum, mismo día, sin datos todavía)
+
+Estas precisiones no cambian ningún umbral. Completan detalles que el texto original dejaba abiertos:
+
+1. **McNemar (H2):** se aplica a las predicciones TEST de la configuración final con **seed 0**, frente a la regresión logística de 4096 características. Las seeds 1–4 se reportan sin test estadístico.
+2. **Control C3 (sin capas de fase):** se implementa como las mismas cuatro propagaciones de 18 mm con todas las fases fijas a cero (`t = 1`). Es propagación libre por tramos, sin entrenamiento. No se usa una propagación única de 72 mm porque excede `z_max`.
+3. **Entrenamiento:** mini-lotes de 32 muestras con el gradiente medio del lote, calculado con `DiffractiveNetwork.loss_and_grad`, y un paso de Adam por lote. No se usa `fit` (que es de lote completo, un paso por época).
+4. **Uso de TRAIN y DEV:** el entrenamiento usa solo TRAIN. DEV sirve solo para elegir `β`, `lr` y `C` de la logística. TEST no interviene en ninguna elección.
+5. **Ampliación y energía:** la ampliación ×8 se hace antes de normalizar `u0 = a/‖a‖₂`. Después se rellena con ceros hasta 128×128.
+6. **Logística de 8×8:** solo se reporta, no entra en ningún criterio de aprobación.
+
 ## Qué se reportará siempre
 
 - Precisión DEV y TEST por seed, media y desviación típica.
