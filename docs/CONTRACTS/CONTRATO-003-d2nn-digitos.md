@@ -15,7 +15,7 @@
 - C2: untrained random phases; mean TEST accuracy ≤ 0.20.
 - C3: no phase layers (free propagation); TEST accuracy ≤ 0.20.
 
-**Status: in progress.** No TEST result exists, and no verdict has been issued for H1, H2, C1, C2 or C3. Validation (DEV) accuracies are preliminary and are not results, so they are not reported here.
+**Status: complete.** TEST was evaluated once per seed with the DEV-selected configuration; verdicts are in the registry below. Validation (DEV) accuracies are preliminary and are not results, so they are not reported here.
 
 **What will be reported.** DEV and TEST accuracy per seed (mean and standard deviation), the TEST confusion matrix for the final configuration, all controls, compute time and network size.
 
@@ -97,6 +97,44 @@ Estas precisiones no cambian ningún umbral. Completan detalles que el texto ori
 
 ## Registro de resultados
 
-_Se completa tras ejecutar el experimento. Cada resultado: fecha UTC, commit, valores, veredicto por hipótesis y control._
+**Result status.** The final TEST run is complete. TEST was used once, with the configuration chosen on DEV. Verdicts: H1 pass, H2 fail, C1 to C3 pass.
+
+**Run record.**
+- Result file: `experiments/results/d2nn_digits_summary.json`.
+- Date (UTC): run started on 2026-10-09 at about 21:03 UTC (log timestamp 23:02:43 at UTC+2). Runtime 13,019 s (about 3.6 h). The summary file was written on 2026-10-10 at about 00:39 UTC.
+- Commit: not yet recorded. At HEAD `81f0d8b` the summary file was untracked, so the commit that adds it must be written here.
+- Script: `experiments/run_d2nn_digits.py` (committed in `af52aff`; see the provenance note at the end of this section).
+- Network: N = 128, dx = 0.4 mm, λ = 0.75 mm, three phase layers, 18 mm between planes, 3·128² = 49,152 phase parameters.
+- Selected configuration (DEV, seed 0): β = 100, lr = 0.02, DEV accuracy 0.9554.
+- Logistic baselines: both selected C = 10 on DEV.
+
+**Verdicts (TEST, one use).**
+
+| Code | Criterion (contract) | Result | Threshold | Verdict |
+|---|---|---|---|---|
+| H1 (primary) | Mean TEST over 5 seeds; each seed | mean 0.9622 (sample SD 0.0032); minimum 0.9583 | mean ≥ 0.85; each seed ≥ 0.80 | Pass (`cumple`) |
+| H2 | Paired difference D2NN − logistic 64×64; McNemar exact on seed 0 | difference +0.0094 against 0.9528; p = 0.21875 (b = 5, c = 1) | difference ≥ 0 and p < 0.05 | Fail (`no cumple`) |
+| C1 | Training labels permuted | mean 0.1256; per seed 0.0806, 0.1667, 0.1333, 0.1583, 0.0889 | mean ≤ 0.15 | Pass (`cumple`) |
+| C2 | Untrained (random) phases | mean 0.1244; per seed 0.1333, 0.1250, 0.1056, 0.1250, 0.1333 | mean ≤ 0.20 | Pass (`cumple`) |
+| C3 | No phase layers (zero phases) | 0.025 | ≤ 0.20 | Pass (`cumple`) |
+
+**Per-seed accuracy (DEV and TEST), with Wilson 95 % intervals for TEST (n = 360).**
+
+| Seed | DEV | TEST | Wilson 95 % (TEST) |
+|---|---|---|---|
+| 0 | 0.9554 | 0.9639 | [0.9392, 0.9788] |
+| 1 | 0.9694 | 0.9611 | [0.9358, 0.9767] |
+| 2 | 0.9499 | 0.9583 | [0.9324, 0.9746] |
+| 3 | 0.9610 | 0.9611 | [0.9358, 0.9767] |
+| 4 | 0.9554 | 0.9667 | [0.9426, 0.9808] |
+| Mean (sample SD) | 0.9582 (0.0074) | 0.9622 (0.0032) | not reported; see note 4 |
+
+**Confusion matrix (seed 0, TEST, total 360).** Correct counts per digit (diagonal) for 0 to 9: 34, 34, 35, 37, 36, 36, 36, 36, 30, 33 (sum 347, accuracy 0.9639). The summary JSON does not contain the full matrix, so the off-diagonal counts are not reported here.
+
+**Notes.**
+1. **H2 failure.** The D2NN does not beat the linear baseline. The difference from the 64×64 logistic regression (0.9528) is +0.0094, and the exact McNemar p is 0.21875 on six discordant pairs (5 with only the D2NN correct, 1 with only the baseline correct). H2 therefore fails. There is no evidence of superiority over a linear model with comparable input information. The 64×64 input is an 8× pixel repetition of the 8×8 image, and the 8×8 logistic baseline has the same TEST accuracy (0.9528). The McNemar test covers seed 0 only.
+2. **Boundary selection.** β = 100 is the largest value in the pre-registered grid {20, 50, 100}, and C = 10 is the largest value in the logistic grid {0.01, 0.1, 1, 10}. The grids were not extended, so the selected settings sit at their edges, and better settings may lie outside them. All choices were made on DEV only.
+3. **Grid (N = 128).** This is the grid that CONTRATO-004 T2 flags: a window-size effect of about 4 % at 18 mm (relative L2 4.4 × 10⁻², threshold 2 × 10⁻²). The N = 256 robustness check of the final configuration is pending as CONTRATO-005 and is not reported here. Until it is done, D2NN numbers from this record should be read with that caveat.
+4. **Aggregated Wilson interval.** The summary's `test_wilson_mean_seeds` (0.9358 to 0.9767) treats the seed-mean accuracy as one binomial proportion over 360 test images. That is mis-specified: the five seeds share one TEST set, and the variation comes from training runs, not from sampling test items. It is not a valid interval for the mean and is not reported as one; the per-seed intervals above are the intervals reported. The figure `docs/img/d2nn_results.gif` still displays the mis-specified interval, and the figure generator needs a correction.
 
 **Note (2026-10-10).** The audit found that `experiments/run_d2nn_digits.py` was committed (af52aff) about nine minutes after its run started (log timestamp 23:02:43). Git history therefore cannot show that the committed script is the version that produced that run. This note changes no threshold and reports no result.
