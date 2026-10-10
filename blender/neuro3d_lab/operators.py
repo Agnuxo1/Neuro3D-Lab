@@ -2,7 +2,6 @@
 """Operators, scene properties and N-panel for Neuro3D Lab."""
 import importlib
 import os
-import sys
 
 import bpy
 import numpy as np
@@ -76,12 +75,11 @@ class OPTLAB_OT_run_bench(bpy.types.Operator):
     def execute(self, context):
         s = context.scene
         src = bpy.path.abspath(s.optlab_src_path)
-        if src and src not in sys.path:
-            sys.path.insert(0, src)
+        bench_io.prefer_optlab_path(src)  # bundled copy first; the UI folder is a fallback
         try:
             bench = importlib.import_module("optlab.bench")
         except ImportError as exc:
-            self.report({"ERROR"}, f"optlab not importable from '{src}': {exc}")
+            self.report({"ERROR"}, f"optlab not importable (bundled copy or '{src}'): {exc}")
             return {"CANCELLED"}
         json_path = os.path.join(_out_dir(s), "bench.json")
         if not os.path.isfile(json_path):

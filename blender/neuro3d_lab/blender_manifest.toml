@@ -2,7 +2,7 @@
 schema_version = "1.0.0"
 
 id = "neuro3d_lab"
-version = "0.1.0"
+version = "0.1.1"
 name = "Neuro3D Lab"
 tagline = "Virtual optical bench for diffractive optical neural networks"
 maintainer = "Francisco Angulo de Lafuente"
@@ -12,7 +12,8 @@ tags = ["3D View", "Import-Export"]
 blender_version_min = "4.2.0"
 
 # License: GPL-3.0-or-later. The official extensions catalogue requires GPL-3.0-or-later
-# for add-ons. The core library optlab is Apache-2.0 (see the repository LICENSE).
+# for add-ons. The bundled core library optlab (_vendor/optlab) is Apache-2.0; its
+# LICENSE and NOTICE travel with the copy.
 license = [
   "SPDX:GPL-3.0-or-later",
 ]
