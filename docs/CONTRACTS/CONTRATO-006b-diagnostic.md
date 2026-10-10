@@ -34,3 +34,21 @@ Two further checks, both post hoc and not part of the verdict.
 **Hypothesis (not verified over the full grid).** The V2 relative error of 0.133 is computed over all 128 × 128 nodes, including the outer region up to about ±25 mm where the taper is still substantial. The V2 reference used a 51.2 mm source window, which truncates the tilted wave near its edges. The finite-window reference differs from the large-window one there, and that difference dominates the full-grid relative error. A direct test needs the 205 mm reference on all 128 × 128 nodes, which is computationally heavy and is left open.
 
 **Consequence for the overall reading.** The angular spectrum agrees with an independent Rayleigh–Sommerfeld reference to a few parts in 10⁶ in the region where the field is strong. The CONTRATO-006 V2 failure is therefore best attributed to the finite-window reference and the full-grid metric, not to the central propagation. This explanation remains a hypothesis until the full-grid test is run. CONTRATO-006 V2 remains **fail** as registered.
+
+## Addendum 2 (post hoc): full-grid result, and correction of Addendum 1
+
+Full 128 × 128 grid (16,384 nodes), `experiments/diagnose_v2_fullgrid.py`, output `experiments/results/diagnose_v2_fullgrid.json`:
+
+| Pair | Relative L2 |
+|---|---|
+| ASM against RS, 51.2 mm window (the V2 reference) | 0.1335 |
+| ASM against RS, 205 mm window | 0.1335 |
+| RS 51.2 mm against RS 205 mm | **0.0** |
+
+By radius: ASM against RS 205 mm agrees to 2 × 10⁻⁶ for r ≤ 6.4 mm, to 6.9 × 10⁻⁵ for 6.4 < r ≤ 12.8 mm, and differs by **0.16** for 12.8 < r ≤ 25.6 mm.
+
+**Correction.** Addendum 1 suggested that the finite 51.2 mm reference window caused the V2 failure. **This is refuted:** the two reference windows give identical fields on the full grid. The discrepancy lies entirely in the outer annulus 12.8–25.6 mm, and it is between the angular spectrum and both reference computations.
+
+**Open hypothesis (not tested).** The tapered input is a super-Gaussian of order 8 with a broad spectrum. The angular spectrum samples it at dx = 0.4 mm (Nyquist 1.25 mm⁻¹), whereas the reference samples it at dx/2. If aliasing of the input is the cause, a reference that samples the input at dx, in the same way as the angular spectrum, should reproduce the angular-spectrum field in the outer annulus. This is the next check.
+
+CONTRATO-006 V2 remains **fail** as registered.
