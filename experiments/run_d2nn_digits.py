@@ -7,11 +7,12 @@ sólo al final, con TEST usado una única vez.
 Uso: python experiments/run_d2nn_digits.py
 Salida: resumen en experiments/results/d2nn_digits_summary.json (versionado) y datos
 completos (predicciones, matriz de confusión, historial DEV) en
-D:/PROJECTS/.cognition/neuro3d-lab/results/d2nn_digits.json (no versionado).
+$NEURO3D_LAB_OUT/results/d2nn_digits.json (not versioned; default: ../.cognition/neuro3d-lab/results).
 """
 from __future__ import annotations
 
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -43,7 +44,7 @@ EPOCHS = 30
 BATCH = 32
 SEEDS = [0, 1, 2, 3, 4]
 C_GRID = [0.01, 0.1, 1.0, 10.0]
-OUT_LOCAL = Path("D:/PROJECTS/.cognition/neuro3d-lab/results")
+OUT_LOCAL = Path(os.environ.get("NEURO3D_LAB_OUT", ROOT.parent / ".cognition" / "neuro3d-lab")) / "results"
 OUT_REPO = ROOT / "experiments" / "results"
 LOG = OUT_LOCAL / "d2nn_digits.log"
 
