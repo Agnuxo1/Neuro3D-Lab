@@ -11,6 +11,7 @@ scene.unit_settings.scale_length (metres = BU * scale_length).
 """
 import json
 import os
+import sys
 from pathlib import Path
 
 import bpy
@@ -27,6 +28,11 @@ EPS_BU = 1e-4
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 OPTLAB_SRC = os.path.join(REPO_ROOT, "src")
 
+# Bundled copy of the optlab numerical core (Apache-2.0, see _vendor/optlab/LICENSE), so that
+# an install from the Blender Extensions catalogue needs no pip install. It must stay identical
+# to <repo>/src/optlab: copy the .py files again after any change to src/optlab.
+VENDOR_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_vendor")
+
 # In-domain demo bench. optlab's validity domain is plane spacing < z_max = N*pixel^2*n/lambda.
 # For N=256, pixel 8 um, lambda 633 nm: z_max = 25.9 mm; the plane spacing is 20 mm.
 DEMO_N = 256
@@ -42,6 +48,24 @@ def out_root():
     if env:
         return os.path.abspath(env)
     return str(Path(__file__).resolve().parents[3] / ".cognition" / "neuro3d-lab")
+
+
+def prefer_optlab_path(user_src=""):
+    """Put the bundled optlab first on sys.path; user_src (a folder chosen in the UI) is a fallback.
+
+    Without a bundled copy, user_src goes first, as before. Returns True when the bundled
+    copy is used.
+    """
+    bundled = os.path.isfile(os.path.join(VENDOR_DIR, "optlab", "__init__.py"))
+    if bundled:
+        while VENDOR_DIR in sys.path:
+            sys.path.remove(VENDOR_DIR)
+        sys.path.insert(0, VENDOR_DIR)
+        if user_src and user_src not in sys.path:
+            sys.path.append(user_src)
+    elif user_src and user_src not in sys.path:
+        sys.path.insert(0, user_src)
+    return bundled
 
 
 def z_max_m(n, pixel_m, wavelength_m, medium_index=1.0):

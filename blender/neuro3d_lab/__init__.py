@@ -4,7 +4,7 @@
 bl_info = {
     "name": "Neuro3D Lab",
     "author": "Neuro3D",
-    "version": (0, 1, 0),
+    "version": (0, 1, 1),
     "blender": (4, 5, 0),
     "location": "View3D > Sidebar > Neuro3D Lab",
     "description": "Build, export and visualise optical bench scenes (optlab.bench/1)",
