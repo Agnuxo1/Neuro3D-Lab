@@ -1,0 +1,39 @@
+{
+ "contract": "CONTRATO-011",
+ "status": "POST HOC, DEV only, TEST not used",
+ "input": {
+  "phases_file": "d2nn_seed0_phases.npz",
+  "sha256": "60f99fceea8a62732c6e59020036407559cf71d5d4442238c2ac3b2d15f65d93",
+  "matches_checksum_file": true,
+  "beta": 100.0,
+  "seed": 0,
+  "n_dev": 359
+ },
+ "q1": {
+  "expected": 0.9554317548746518,
+  "periodic_dev_acc": 0.9554317548746518,
+  "abs_diff": 0.0,
+  "tolerance": 1e-09,
+  "pass": true
+ },
+ "aperture": {
+  "grid": 256,
+  "offset": 64,
+  "dev_acc": 0.8662952646239555
+ },
+ "reference": {
+  "P": 0.9554317548746518,
+  "Z": 0.8495821727019499
+ },
+ "abs_diff_A_P": 0.08913649025069637,
+ "abs_diff_A_Z": 0.01671309192200554,
+ "rule_tolerance": 0.01,
+ "fraction_changed_P_vs_A": 0.11142061281337047,
+ "n_changed_P_vs_A": 40,
+ "fraction_changed_Z_vs_A": 0.03064066852367688,
+ "outcome": "R3",
+ "elapsed_s": 76.8,
+ "zero_padded_recomputed_dev_acc": 0.8495821727019499,
+ "zero_padded_matches_CONTRATO_010": true,
+ "n_changed_Z_vs_A": 11
+}
