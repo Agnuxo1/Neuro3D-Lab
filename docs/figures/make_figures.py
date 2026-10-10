@@ -464,14 +464,14 @@ def fig_results():
     for sp in ("top", "right"):
         ax.spines[sp].set_visible(False)
     vt = ax.text(0.5, 0.95, "", transform=ax.transAxes, ha="center", color=FG, fontsize=10)
-    w = wilson_interval(int(round(s["test_mean"] * s["sizes"]["test"])), s["sizes"]["test"])
+    seed_accs = np.array([f["test_acc"] for f in s["final"]])
+    sd_seeds = float(seed_accs.std(ddof=1))
     n_bars = len(vals)
 
     def update(i):
         for k, b in enumerate(bars):
             b.set_height(vals[k] * min(1.0, max(0.0, (i - k * 2) / 8)))
-        vt.set_text(f"D2NN mean {s['test_mean']:.3f}  95% Wilson CI (per sample) ≈ "
-                    f"[{w[0]:.3f}, {w[1]:.3f}]   logistic 64×64 {vals[6]:.3f}")
+        vt.set_text(f"D2NN mean {s['test_mean']:.3f} ± {sd_seeds:.3f} SD over 5 seeds   logistic 64×64 {vals[6]:.3f}")
         return tuple(bars)
 
     make_anim(fig, update, n_bars * 2 + 12, 12, "d2nn_results.gif", dpi=72)

@@ -20,7 +20,7 @@ Neuro3D-Lab is a simulation project for coherent scalar optical fields. It has t
 - **optlab** (`src/optlab`), a NumPy core that propagates a scalar field with the angular-spectrum method. It also contains models of Fresnel interfaces, a Mach–Zehnder interferometer and a phase-only diffractive neural network (D2NN).
 - **A Blender add-on** (`blender/neuro3d_lab`) that builds the bench, exports it to optlab and displays the detector intensity that optlab returns.
 
-The project is **not** a physical device. It contains no measured data, and it does not model polarisation, reflections between planes or spectral dispersion. Each quantitative claim is linked to a contract with thresholds, or is labelled exploratory. The D2NN experiment is still in progress and reports no TEST accuracy.
+The project is **not** a physical device. It contains no measured data, and it does not model polarisation, reflections between planes or spectral dispersion. Each quantitative claim is linked to a contract with thresholds, or is labelled exploratory. The D2NN digit experiment is complete (see the results section below): it passes the accuracy and control criteria, and does not show a significant advantage over a linear baseline.
 
 ---
 
@@ -40,7 +40,8 @@ The project is **not** a physical device. It contains no measured data, and it d
 | The add-on builds, exports, simulates and imports a bench | Blender self-test: 15 of 15 steps PASS (Blender 4.5.14, headless) | `blender/selftest/run_selftest.py` | Pass; run manually, not in CI |
 | The add-on manifest is valid | `blender --command extension validate blender/neuro3d_lab` | `blender/neuro3d_lab/blender_manifest.toml` | Pass |
 | The Blender bench image shows the optlab intensity | Visualisation only; planes enlarged 15 times in x and y | `blender/render_bench_gif.py`, `docs/img/blender_bench.gif` | Illustration, not evidence |
-| Digit-classification accuracy of the D2NN (under evaluation) | CONTRATO-003 in progress | `experiments/run_d2nn_digits.py` | In progress; no TEST result |
+| The D2NN classifies handwritten digits above the pre-registered thresholds, and the controls are at chance | CONTRATO-003, H1: TEST mean 0.962 (threshold 0.85); worst seed 0.958 (threshold 0.80); controls C1 to C3 pass | `experiments/run_d2nn_digits.py`, `experiments/results/d2nn_digits_summary.json`, [registry](docs/CONTRACTS/CONTRATO-003-d2nn-digitos.md) | Pass, pre-registered; simulation only, N = 128 grid (see CONTRATO-004, T2) |
+| The D2NN classifies digits better than a logistic regression on the same input | CONTRATO-003, H2: difference +0.009 against 0.953 (64 × 64 logistic); McNemar p = 0.22 | `experiments/run_d2nn_digits.py`, `experiments/results/d2nn_digits_summary.json`, [registry](docs/CONTRACTS/CONTRATO-003-d2nn-digitos.md) | Fail, pre-registered; no significant advantage over the linear baseline |
 | Any result applies to a physical device or a measurement | None | none | Not claimed; simulation only, no hardware experiment exists |
 
 ---
@@ -146,7 +147,7 @@ Each contract states its thresholds. The git history records when each threshold
 |---|---|---|
 | [CONTRATO-001](docs/CONTRACTS/CONTRATO-001-nucleo.md) | Core unit tests and the Blender self-test | `python -m pytest -q`: 32 pass. Blender self-test: 15 of 15 steps PASS |
 | [CONTRATO-002](docs/CONTRACTS/CONTRATO-002-validacion-analitica.md) | Analytic validation of the propagator | E1, E2 and E3 pass; E4 exploratory |
-| [CONTRATO-003](docs/CONTRACTS/CONTRATO-003-d2nn-digitos.md) | D2NN on handwritten digits, with controls | In progress; no TEST result |
+| [CONTRATO-003](docs/CONTRACTS/CONTRATO-003-d2nn-digitos.md) | D2NN on handwritten digits, with controls | Complete: H1 pass, H2 not met, controls pass |
 | [CONTRATO-004](docs/CONTRACTS/CONTRATO-004-regimen-d2nn.md) | D2NN sampling regime (dx/λ = 0.53) | T1 pass; T2 and T3 fail, published with their values |
 
 **Validation summary**
@@ -168,9 +169,29 @@ Each contract states its thresholds. The git history records when each threshold
 
 ---
 
-## D2NN status
+## Digit classification (CONTRATO-003)
 
-**In progress.** CONTRATO-003 has not finished, and no TEST accuracy is reported. Validation (DEV) accuracies from the running experiment are preliminary and are not results. The pending work includes the final TEST run, the baselines, controls C1 to C3 and the summary file that the figure generator reads. The D2NN results figure will be generated when that file exists.
+A three-layer, phase-only D2NN was trained on handwritten digits (scikit-learn `load_digits`, 8 × 8 images upsampled to 64 × 64). It was evaluated once on TEST (360 images, five seeds). The thresholds were fixed in advance, and the configuration was chosen on DEV only.
+
+| Code | Criterion | TEST result | Verdict |
+|---|---|---|---|
+| H1 (primary) | Mean over 5 seeds ≥ 0.85, and each seed ≥ 0.80 | mean 0.962, minimum 0.958 | Pass |
+| H2 | D2NN beats a logistic regression on the same input (paired difference ≥ 0 and McNemar p < 0.05) | +0.009 against 0.953; p = 0.22 | Fail |
+| C1 | Permuted training labels: mean ≤ 0.15 | 0.126 | Pass |
+| C2 | Untrained random phases: mean ≤ 0.20 | 0.124 | Pass |
+| C3 | No phase layers: ≤ 0.20 | 0.025 | Pass |
+
+The D2NN classifies well above chance and above the H1 threshold. It does **not** beat the linear baseline significantly: the difference from the 64 × 64 logistic regression is +0.009 (McNemar exact p = 0.22). This is a simulation. The grid is the one that CONTRATO-004 flags (about a 4 % window-size effect), and the N = 256 robustness check is pending as CONTRATO-005.
+
+The full registry, the per-seed intervals and the confusion-matrix diagonal are in [CONTRATO-003](docs/CONTRACTS/CONTRATO-003-d2nn-digitos.md).
+
+<p align="center">
+  <img src="docs/img/d2nn_results.gif" alt="Handwritten digits on TEST: D2NN seeds, their mean, the logistic baselines and the three controls, against the 0.85 threshold" width="90%">
+</p>
+
+<p align="center">
+  <img src="docs/img/verdicts.gif" alt="Verdicts for each pre-registered check, including CONTRATO-003" width="90%">
+</p>
 
 ---
 
@@ -220,7 +241,7 @@ D2NN experiments and README figures (install the optional extras first):
 ```bash
 python -m pip install -e ".[experiments,figures]"
 python experiments/run_regime_d2nn.py    # CONTRATO-004
-python experiments/run_d2nn_digits.py    # CONTRATO-003, in progress, long-running
+python experiments/run_d2nn_digits.py    # CONTRATO-003, about 3.6 h on CPU
 python docs/figures/make_figures.py      # README figures
 ```
 
