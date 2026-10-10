@@ -1,0 +1,51 @@
+{
+ "contract": "CONTRATO-010",
+ "status": "POST HOC, DEV only, TEST not used",
+ "input": {
+  "phases_file": "d2nn_seed0_phases.npz",
+  "sha256": "60f99fceea8a62732c6e59020036407559cf71d5d4442238c2ac3b2d15f65d93",
+  "matches_checksum_file": true,
+  "beta": 100.0,
+  "seed": 0,
+  "n_dev": 359
+ },
+ "q1": {
+  "expected": 0.9554317548746518,
+  "periodic_dev_acc": 0.9554317548746518,
+  "abs_diff": 0.0,
+  "tolerance": 1e-09,
+  "pass": true
+ },
+ "zero_padded": {
+  "grid": 256,
+  "offset": 64,
+  "dev_acc": 0.8495821727019499
+ },
+ "q2": {
+  "abs_diff_dev_acc": 0.1058495821727019,
+  "negligible_max": 0.005,
+  "material_min": 0.02,
+  "class": "material"
+ },
+ "q3": {
+  "fraction_changed": 0.12813370473537605,
+  "n_changed": 46,
+  "negligible_max": 0.01,
+  "material_min": 0.03,
+  "class": "material"
+ },
+ "q4": {
+  "median_rel_L2": 0.7533120854432743,
+  "p90_rel_L2": 0.7930970232475782,
+  "max_rel_L2": 0.8069698042256891,
+  "negligible_max": 0.01,
+  "material_min": 0.05,
+  "class": "material"
+ },
+ "descriptive": {
+  "correct_periodic_only": 40,
+  "correct_zero_padded_only": 2
+ },
+ "outcome": "material",
+ "elapsed_s": 35.7
+}

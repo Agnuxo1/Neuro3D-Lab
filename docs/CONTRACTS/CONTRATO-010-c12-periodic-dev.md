@@ -52,3 +52,25 @@ A value between the negligible and material bounds is classed as **intermediate*
 - Q1 (periodic DEV accuracy): to be filled after the run.
 - Q2, Q3, Q4 values and classes: to be filled after the run.
 - **Outcome:** to be filled after the run.
+
+## Result (POST HOC, DEV only, run after the commit 915c1a6)
+
+Script `experiments/c12_periodic_dev_d2nn.py`; output `experiments/results/c12_periodic_dev_d2nn.json`. Phases from `experiments/results/d2nn_seed0_phases.npz`, sha256 60f99fce…; the save step reproduced DEV 0.9554317548746518 exactly.
+
+| Quantity | Value | Threshold | Level |
+|---|---|---|---|
+| Q1 periodic DEV accuracy | 0.9554317548746518 | reproduces the registered value | ok |
+| Zero-padded DEV accuracy | 0.8495821727019499 | | |
+| Q2 change in DEV accuracy | 0.1059 | negligible ≤ 0.005, material ≥ 0.02 | **material** |
+| Q3 fraction of DEV predictions that change | 0.1281 | negligible ≤ 0.01, material ≥ 0.03 | **material** |
+| Q4 median relative change of the detector scores | 0.7533 | negligible ≤ 0.01, material ≥ 0.05 | **material** |
+
+**Outcome (pre-registered rule): material.**
+
+**Reading.** The seed-0 D2NN was trained and evaluated with the periodic 51.2 mm window. Under zero-padded propagation with the same phases, DEV accuracy falls by 10.6 points. The trained model depends on the periodic wrap-around. CONTRATO-006c showed that the propagator itself is exact when the window is not periodic, so this is a property of the trained model under the two boundary conventions, not a numerical error in the padded propagator.
+
+**Limits.**
+- The zero-padded model is one choice: phases are transparent (phase 0) outside the 128 window. An aperture model, where the light outside the window is lost, would give different numbers. This was not tested.
+- DEV only. The TEST numbers of CONTRATO-003 (seed-0 TEST 0.9639, mean 0.9622) were produced under the periodic convention. They must be reported with this caveat, and they are not re-evaluated here (the TEST split is spent).
+- This is post hoc. It does not change any verdict of CONTRATO-003, 005 or 007, but it changes what those results mean physically.
+- Second opinion: requested from JEV before any further claim is made.

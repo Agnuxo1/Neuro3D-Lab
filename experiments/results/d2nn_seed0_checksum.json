@@ -1,0 +1,11 @@
+{
+ "file": "d2nn_seed0_phases.npz",
+ "sha256": "60f99fceea8a62732c6e59020036407559cf71d5d4442238c2ac3b2d15f65d93",
+ "bytes": 395280,
+ "contract": "CONTRATO-003",
+ "seed": 0,
+ "beta": 100.0,
+ "lr": 0.02,
+ "dev_acc": 0.9554317548746518,
+ "note": "Reproducci\u00f3n post hoc entrenada s\u00f3lo con TRAIN; no es un veredicto nuevo."
+}
