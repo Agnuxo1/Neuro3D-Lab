@@ -87,7 +87,13 @@ Encoding, unit-energy normalisation, detector masks and training are the importe
 | Quantity | Value | Verdict |
 |---|---|---|
 | TEST_128, seed 0 (CONTRATO-003) | 0.9638888888888889 (347/360) | reference |
-| TEST_256, seed 0 | pending (full run not executed) | pending |
-| \|TEST_256 − TEST_128\| ≤ 0.01 | pending | pending |
-| TEST_256 ≥ 0.85 | pending | pending |
-| Verdict | pending | pending |
+| TEST_256, seed 0 | 0.9694444444444444 (349/360) | measured |
+| \|TEST_256 − TEST_128\| ≤ 0.01 | 0.0056 | pass |
+| TEST_256 ≥ 0.85 | 0.9694 | pass |
+| Verdict | **stable (post hoc)** | — |
+
+## Result registry
+
+Run: `python experiments/run_d2nn_robustness_n256.py`, 3902 s on CPU, finished 2026-10-10 04:17 local. Summary: `experiments/results/d2nn_robustness_n256_summary.json`.
+
+One seed only. The verdict is stable under the stated tolerance. It is a post hoc check, not a confirmatory test, and it does not rule out seed-to-seed variation: the five-seed spread at N = 128 is 0.9583 to 0.9667.
