@@ -1,0 +1,51 @@
+{
+ "post_hoc": true,
+ "label": "POST HOC DIAGNOSTIC for CONTRACT-006 V2; not a gate; does not change the CONTRACT-006 verdict",
+ "parameters": {
+  "lambda_m": 0.00075,
+  "dx_m": 0.0004,
+  "N": 128,
+  "d_m": 0.018,
+  "sin_theta_b": 0.498046875,
+  "rho_taper_m": 0.018,
+  "taper_order": 8,
+  "source_pitch_b_m": 0.0002,
+  "source_pitch_c_m": 0.0001,
+  "max_kernel_entries_per_chunk": 4000000
+ },
+ "errors": {
+  "tapered_I2_V2": {
+   "a_vs_b": 0.133488769465845,
+   "a_vs_c": 0.13348876946765226,
+   "b_vs_c": 8.012046997046323e-11
+  },
+  "untapered_I2_optional": {
+   "a_vs_b": 0.5219188543798068,
+   "a_vs_c": 0.5217726199949244,
+   "b_vs_c": 0.0023981938061878078
+  }
+ },
+ "reproduction_vs_stored_fields": {
+  "stored_file_found": true,
+  "asm_tapered_rel_diff": 0.0,
+  "rs_dx2_tapered_rel_diff": 6.362809330724227e-16,
+  "asm_untapered_rel_diff": 0.0,
+  "rs_dx2_untapered_rel_diff": 8.195459758707192e-16
+ },
+ "v2_registered": 0.133,
+ "v2_recomputed_a_vs_b": 0.133488769465845,
+ "rule_1_ref_dominated": false,
+ "rule_2_asm_below_0p01_vs_c": false,
+ "verdict": "Neither rule holds: the dx/2 reference is not far from dx/4 by a V2-sized amount, and the ASM is not within 0.01 of the dx/4 reference.",
+ "timing_s": {
+  "asm": 0.004197359085083008,
+  "rs_dx2_two_fields": 141.39046382904053,
+  "rs_dx4_two_fields": 593.0010340213776,
+  "total": 734.4984927177429
+ },
+ "environment": {
+  "python": "3.13.7",
+  "numpy": "2.2.6",
+  "scipy": "1.15.1"
+ }
+}
