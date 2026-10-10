@@ -20,7 +20,7 @@ Neuro3D-Lab is a simulation project for coherent scalar optical fields. It has t
 - **optlab** (`src/optlab`), a NumPy core that propagates a scalar field with the angular-spectrum method. It also contains models of Fresnel interfaces, a Mach–Zehnder interferometer and a phase-only diffractive neural network (D2NN).
 - **A Blender add-on** (`blender/neuro3d_lab`) that builds the bench, exports it to optlab and displays the detector intensity that optlab returns.
 
-The project is **not** a physical device. It contains no measured data, and it does not model polarisation, reflections between planes or spectral dispersion. Each quantitative claim is linked to a contract with thresholds, or is labelled exploratory. The D2NN digit experiment is complete (see the results section below): it passes the accuracy and control criteria, and does not show a significant advantage over a linear baseline.
+The project is **not** a physical device. It contains no measured data, and it does not model polarisation, reflections between planes or spectral dispersion. Each quantitative claim is linked to a contract with thresholds, or is labelled exploratory. The D2NN digit experiment is complete (see the results section below): it passes the accuracy and control criteria, and does not show a significant advantage over a linear baseline. A post hoc robustness check at N = 256 (CONTRATO-005), with the same seed and configuration, gives TEST 0.9694 against 0.9639 at N = 128: stable within the pre-registered tolerance, labelled post hoc.
 
 ---
 
