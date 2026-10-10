@@ -44,3 +44,19 @@ Also reported: the fraction of DEV predictions that change between P and A, and 
 - A (aperture DEV accuracy), |A - P|, |A - Z|: to be filled after the run.
 - Fraction of predictions changed, P vs A and Z vs A: to be filled after the run.
 - **Outcome (R1, R2 or R3):** to be filled after the run.
+
+## Result (POST HOC, DEV only, run after the commit 7f83a56)
+
+Output `experiments/results/c12b_aperture_dev_d2nn.json`. Q1 gate passed: periodic DEV 0.9554317548746518.
+
+| Quantity | Value |
+|---|---|
+| Aperture DEV accuracy A | 0.8662952646239555 |
+| \|A − P\| (P periodic 0.9554317548746518) | 0.089136 |
+| \|A − Z\| (Z zero-padded transparent 0.8495821727019499) | 0.016713 |
+| Fraction of predictions changed, P → A | 0.111421 |
+| Fraction of predictions changed, Z → A | 0.030641 |
+
+**Outcome (pre-registered rule): R3, inconclusive.** |A − P| is far above 0.01, so the aperture model does not reproduce the periodic result. |A − Z| = 0.0167 is above the 0.01 tolerance, so it does not match the transparent padded model either.
+
+**Reading.** Both physically non-periodic conventions (absorbing aperture and transparent padding) give DEV accuracy about 9 to 11 points below the periodic convention. The aperture result lies closer to the transparent one. The periodic-wrap dependence of the seed-0 D2NN is therefore not an artefact of the transparency assumption alone. This is a DEV-only, post hoc result. It does not change any CONTRATO-003 verdict, and TEST is not re-evaluated.
