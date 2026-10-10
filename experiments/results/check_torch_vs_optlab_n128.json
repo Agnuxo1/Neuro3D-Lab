@@ -1,0 +1,25 @@
+{
+ "contract": "CONTRATO-008 gate T0 (N = 128 torch versus optlab)",
+ "N": 128,
+ "beta": 100.0,
+ "label": 3,
+ "tolerances": {
+  "I_rel": 1e-09,
+  "score_rel": 1e-09,
+  "loss_abs": 1e-10,
+  "grad_rel": 1e-08
+ },
+ "values": {
+  "I_rel": 4.318614014569219e-14,
+  "score_rel": 4.239124903945825e-15,
+  "loss_abs": 3.1086244689504383e-15,
+  "grad_rel": 5.83764190922612e-14
+ },
+ "pass": {
+  "I_rel": true,
+  "score_rel": true,
+  "loss_abs": true,
+  "grad_rel": true
+ },
+ "verdict": "PASS"
+}
