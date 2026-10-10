@@ -1,0 +1,30 @@
+{
+ "contract": "CONTRATO-006",
+ "status": "full run",
+ "amendments": [
+  "A1 exact RS kernel",
+  "A2 S0 on disc window with closed form",
+  "A3 I2 bin-aligned tilt with taper for V2"
+ ],
+ "thresholds": {
+  "S0": 0.001,
+  "C1": 0.005,
+  "V1": 0.01,
+  "V2": 0.01,
+  "V3": 0.05
+ },
+ "gate_S0_error": 0.0006178910584886481,
+ "values": {
+  "V1_I1_intensity_ASM_vs_RS": 1.5691290617083192e-15,
+  "C1_I1_intensity_RS_dx2_vs_dx4": 3.807533077498304e-15,
+  "V2_I2_tapered_field_ASM_vs_RS": 0.13348876946584504,
+  "V3_I3_intensity_ASM_vs_RS": 0.04481395677087483
+ },
+ "verdicts": {
+  "S0": "pass",
+  "C1": "pass",
+  "V1": "pass",
+  "V2": "fail",
+  "V3": "pass"
+ }
+}
