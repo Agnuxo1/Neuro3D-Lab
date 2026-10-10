@@ -97,7 +97,7 @@ Logs kept outside the repository are not counted as evidence. Totals: 51 items; 
 | C08 | P1 | version requirements | in progress | The uncommitted README says Python 3.10 or newer; the committed README says 3.13. CI runs Python 3.13. No run record for other versions. | small |
 | C10 | P1 | stated capability | in progress | The uncommitted README describes the add-on as laying out the bench and showing results. The add-on has four operators: build, export, import and run. | small |
 | C11 | P1 | scope: D2NN wavelength | in progress | The uncommitted README states lambda = 0.75 mm (terahertz range) and dx/lambda = 0.53. The committed README omits the wavelength. | small |
-| C12 | P1 | numerical validity of the D2NN (sampling and periodic edge) | in progress | The uncommitted README discloses the periodic boundary and the sampling limit, and reports T2 and T3. The grid fix is not implemented (see G02, G03). | large (CPU, hours); must be done before D2NN results are published |
+| C12 | P1 | numerical validity of the D2NN (sampling and periodic edge) | in progress | The uncommitted README discloses the periodic boundary and the sampling limit, and reports T2 and T3. The grid fix is not implemented (see G02, G03). CONTRATO-006c (post hoc, 2026-10-10) shows that the periodic FFT window alone accounts for the V2 annulus discrepancy (0.16 in 12.8–25.6 mm): zero-padded propagation agrees with the Rayleigh–Sommerfeld reference to 1.6 × 10⁻⁹, and input sampling is not a factor. The effect on the D2NN experiments is not yet quantified. | large (CPU, hours); must be done before D2NN results are published |
 
 ### 2.4 Additional items found in this review
 
