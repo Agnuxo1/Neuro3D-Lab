@@ -1,0 +1,35 @@
+{
+ "contract": "CONTRATO-006c (post hoc)",
+ "q1_asm128_vs_rs51_full": 0.1334889131246678,
+ "q1_reproduced_registered_v2": true,
+ "q2_images_asm256pad_vs_rs51_full": 1.3545307518793268e-09,
+ "q2_images_asm256pad_vs_rs51_annulus": 1.5958155579186234e-09,
+ "q3_sampling_asm_dx2_vs_rs51_full": 0.13348891312548095,
+ "q3_sampling_asm_dx2_vs_rs51_annulus": 0.16066135189338493,
+ "q4_decomp_asm128_vs_asm256pad_full": 0.13348891315180272,
+ "q5_decomp_asm128_vs_asm_dx2_full": 1.1691150946527216e-09,
+ "bands_q2_images": {
+  "r<=6.4mm": 7.761913781736213e-10,
+  "6.4<r<=12.8mm": 7.411734483167393e-10,
+  "12.8<r<=25.6mm": 1.5958155579186234e-09
+ },
+ "bands_q3_sampling": {
+  "r<=6.4mm": 1.6283079854766744e-06,
+  "6.4<r<=12.8mm": 6.897792099980814e-05,
+  "12.8<r<=25.6mm": 0.16066135189338493
+ },
+ "bands_q1_asm128": {
+  "r<=6.4mm": 1.6282784129445436e-06,
+  "6.4<r<=12.8mm": 6.897780575884349e-05,
+  "12.8<r<=25.6mm": 0.16066135189099173
+ },
+ "decision": {
+  "images_explain": true,
+  "sampling_explains": false,
+  "tol_v2": 0.01,
+  "tol_refute": 0.05
+ },
+ "outcome": "periodic images explain the discrepancy",
+ "descriptive_max_abs_input_on_128_edge": 1.48119857631025e-07,
+ "runtime_s": 194.4
+}
