@@ -126,3 +126,22 @@ Intensity relative L2 is ‖I_a − I_b‖/‖I_b‖ with I = |u|² on the coars
 Diagnostics from the same run (not gates): D1 infinite-plane K_spec error 6.630 × 10⁻³; D2 infinite-plane K_exact closed-form error 1.941 × 10⁻¹⁹; D3 disc S0 at dx/4 4.744 × 10⁻⁴ and at dx/8 1.949 × 10⁻⁵; D4 disc S0 with K_spec 1.241 × 10⁻²; D5 square window vs e^{ikd} 3.907 × 10⁻¹.
 
 **Full run:** not executed. The gate for starting it is S0 passing, which it does. C1, V1, V2 and V3 have not been evaluated.
+
+## Result registry
+
+Run: `python experiments/run_rayleigh_sommerfeld.py`, completed 2026-10-10 (about 06:20 local). Full record outside the repository; summary in `experiments/results/rayleigh_sommerfeld_summary.json`.
+
+| Code | Quantity | Measured | Threshold | Verdict |
+|---|---|---|---|---|
+| S0 | normalisation error, disc window, K_exact | 6.18 × 10⁻⁴ | ≤ 1 × 10⁻³ | **pass** |
+| C1 | I1 intensity, RS(dx/2) against RS(dx/4) | 3.8 × 10⁻¹⁵ | ≤ 5 × 10⁻³ | **pass** |
+| V1 | I1 intensity, ASM against RS(dx/2) | 1.6 × 10⁻¹⁵ | ≤ 1 × 10⁻² | **pass** |
+| V2 | I2 tapered complex field, ASM against RS(dx/2) | 1.33 × 10⁻¹ | ≤ 1 × 10⁻² | **fail** |
+| V3 | I3 digit intensity, ASM against RS(dx/2) | 4.48 × 10⁻² | ≤ 5 × 10⁻² | **pass** (marginal) |
+
+**Interpretation, stated without post hoc changes.**
+- C1 and V1 pass to machine precision, but I1 is a smooth Gaussian: its integrand is so well resolved that both the reference and the angular spectrum are essentially exact for it. These two tests therefore do not discriminate between the methods. Their passing does not validate the discrete model at this sampling.
+- V2 fails by a large margin. The pre-registered metric attributes the whole discrepancy to the angular spectrum, but the test did not check the reference's own convergence for the oscillatory input I2. The most likely explanation, not yet tested, is quadrature error of the reference: at source pitch dx/2 the tilted wave is sampled about 3.75 times per wavelength, so the direct sum is not spectrally converged for I2. The check that would settle it is C1 applied to I2 (RS at dx/2 against RS at dx/4), which was not part of this pre-registration. It is planned as a labelled follow-up, not as a repair of CONTRATO-006.
+- V3 passes with a margin of 0.005. The digit input has sharp edges, which both methods sample at the same resolution.
+
+**Consequence.** The independent reference at dx/λ = 0.53 is not yet established: the pre-registered validation of the angular spectrum against Rayleigh–Sommerfeld failed on the oscillatory test (V2). The digit-intensity agreement (V3) passes, but it is marginal and does not by itself establish the reference.
