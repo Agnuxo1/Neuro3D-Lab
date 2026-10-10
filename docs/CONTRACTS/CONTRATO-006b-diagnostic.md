@@ -23,3 +23,14 @@ Runtime 734.5 s; exit code 0. Recomputed V2 matches the registered value (1.33 �
 4. Not yet established: whether the error lies in the reference kernel implementation, in the periodic (FFT) boundary of the angular spectrum, or in the scalar model itself. A planned test is an analytic tilted plane wave on a large disc, checked against the exact plane-wave solution for each method. It is not run here.
 
 **Consequence.** The simulator's propagator is not yet validated against an independent reference in the D2NN sampling regime. The CONTRATO-004 T1 pass (analytic plane waves on the grid) does not establish agreement with a reference method. Results from the D2NN experiments carry this as an open systematic uncertainty.
+
+## Addendum (post hoc, same day): where the V2 discrepancy sits
+
+Two further checks, both post hoc and not part of the verdict.
+
+- **Central nodes, large-window reference.** The reference was recomputed on a 205 mm window at source pitch dx/2 (1024 × 1024 sources). The angular spectrum at N = 128 agrees with it to **4 × 10⁻⁷** on the central 9 × 9 grid nodes (|x| ≤ 3.2 mm), with observation points on grid nodes (no interpolation).
+- **Intermediate region.** On the central 33 × 33 nodes (|x| ≤ 6.4 mm, where |field| is between 0.39 and 1.0) the agreement is **2 × 10⁻⁶**.
+
+**Hypothesis (not verified over the full grid).** The V2 relative error of 0.133 is computed over all 128 × 128 nodes, including the outer region up to about ±25 mm where the taper is still substantial. The V2 reference used a 51.2 mm source window, which truncates the tilted wave near its edges. The finite-window reference differs from the large-window one there, and that difference dominates the full-grid relative error. A direct test needs the 205 mm reference on all 128 × 128 nodes, which is computationally heavy and is left open.
+
+**Consequence for the overall reading.** The angular spectrum agrees with an independent Rayleigh–Sommerfeld reference to a few parts in 10⁶ in the region where the field is strong. The CONTRATO-006 V2 failure is therefore best attributed to the finite-window reference and the full-grid metric, not to the central propagation. This explanation remains a hypothesis until the full-grid test is run. CONTRATO-006 V2 remains **fail** as registered.
