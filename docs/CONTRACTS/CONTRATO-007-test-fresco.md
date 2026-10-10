@@ -152,3 +152,50 @@ Command: `python experiments/run_fresh_test_benchmark.py --dry-run`, exit code 0
 | C2 | Mean over seeds 0 to 9 ≤ 0.20 | pending | pending |
 
 **Reading rule.** Each verdict is reported as it falls. A failed H2 means no evidence that the D2NN is better than the best DEV-selected baseline on seed 0. It does not show that the D2NN is worse. The result does not change CONTRACT-003, CONTRACT-005 or CONTRACT-006.
+
+
+## Result registry
+
+Run: `python -B experiments/run_fresh_test_benchmark.py --part ...` (parallel parts, then `--part assemble`), completed 2026-10-10 about 07:44 local. Summary: `experiments/results/fresh_test_benchmark_summary.json` (values and verdicts, no per-sample arrays). Source counts: {'load_digits_source': 1797, 'train_contract003': 1078, 'dev_contract003': 359, 'test_contract003_counted_not_evaluated': 360, 'openml_optdigits_v1_rows': 5620, 'source_rows_matched_exactly': 1797, 'test_fresh_uci_training_file': 3823}.
+
+**DEV selection (D2NN).** β = 100: 0.9554; β = 200: 0.9721; β = 400: 0.9721. Tie between 200 and 400, resolved to the smaller β by the pre-registered rule: **β = 200**, lr = 0.02.
+
+**D2NN, ten seeds, evaluated once on TEST_FRESH (n = 3823).**
+
+| Seed | DEV | TEST_FRESH | Wilson 95 % |
+|---|---|---|---|
+| 0 | 0.9721 | 0.9537 | [0.9466, 0.9599] |
+| 1 | 0.9694 | 0.9540 | [0.9469, 0.9602] |
+| 2 | 0.9554 | 0.9464 | [0.9388, 0.9531] |
+| 3 | 0.9721 | 0.9479 | [0.9404, 0.9545] |
+| 4 | 0.9638 | 0.9532 | [0.9460, 0.9594] |
+| 5 | 0.9638 | 0.9550 | [0.9480, 0.9611] |
+| 6 | 0.9666 | 0.9482 | [0.9407, 0.9548] |
+| 7 | 0.9694 | 0.9490 | [0.9416, 0.9555] |
+| 8 | 0.9694 | 0.9506 | [0.9432, 0.9570] |
+| 9 | 0.9554 | 0.9466 | [0.9391, 0.9533] |
+
+Mean 0.9505, sample SD 0.0033, minimum 0.9464, maximum 0.9550.
+
+**Baselines (selected on DEV, evaluated once on TEST_FRESH).**
+
+| Model | Selected | DEV | TEST_FRESH | Parameters |
+|---|---|---|---|---|
+| logit_64x64 | {'C': 100.0} | 0.9638 | 0.9459 | 40970 |
+| logit_8x8_raw | {'C': 10.0} | 0.9666 | 0.9472 | 650 |
+| mlp_653 | {'alpha': 0.01} | 0.9805 | 0.9602 | 48985 |
+| cnn | {'epoch': 18} | 0.9833 | 0.9613 | 50618 |
+
+Best baseline on DEV: **cnn**.
+
+**Paired comparison, seed 0 against the best baseline.** Only the D2NN correct: 38. Only the baseline correct: 67. Exact two-sided McNemar p = 0.0060.
+
+**Controls.** C1 (permuted labels, seeds 0 to 2): mean 0.1072, per seed [0.0753, 0.1546, 0.0918]. C2 (untrained, seeds 0 to 9): mean 0.1118.
+
+**Verdicts.** H1 **pass** (mean ≥ 0.90 and minimum ≥ 0.88). H2 **fail** (the D2NN is below the DEV-selected CNN; McNemar p = 0.0060 against the D2NN). C1 **pass**. C2 **pass**.
+
+**Interpretation, stated as recorded.**
+- A three-layer phase-only D2NN, scalar simulation at this sampling, reaches about 95.1 % on the fresh, writer-disjoint test set, with small seed variance.
+- It does not reach the accuracy of the digital baselines selected on DEV (CNN 96.1 %, MLP 96.0 %). Against the linear baselines the D2NN is slightly higher (logistic 64 × 64 94.6 %, logistic 8 × 8 94.7 %), but these margins are small and are not the primary comparison.
+- The earlier H2 pass-or-fail question in CONTRATO-003 used only a linear baseline. This fair comparison, with a DEV-selected digital baseline, is the one that matters for a claim of advantage, and it is negative.
+- The writer disjointness is taken from the UCI documentation and is not verified per sample (section 1.1).
