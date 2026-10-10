@@ -13,6 +13,10 @@
 
 ---
 
+## Blender Extensions
+
+The add-on has been submitted for review on the official Blender Extensions catalogue: [review status](https://extensions.blender.org/approval-queue/neuro3d-lab/). The listing link will replace this line once the add-on is approved.
+
 ## Abstract
 
 Neuro3D-Lab is a simulation project for coherent scalar optical fields. It has two parts:
