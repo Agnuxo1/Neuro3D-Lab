@@ -52,3 +52,26 @@ Q1 must reproduce before any other quantity is read. If it does not, the run is 
 - If decision rule 2 holds, the input-sampling regime (CONTRATO-004) is the relevant limit and must be stated in the README.
 - Neither result tests vector effects. The diagnostic is a scalar-model test only.
 - Output: `experiments/results/diagnose_v2_periodic_aliasing.json` (repository). Log: `D:/PROJECTS/.cognition/neuro3d-lab/tmp-diag/v2_periodic_aliasing.log`.
+
+## Results (POST HOC, run after the pre-registration commit f385dc2)
+
+Script `experiments/diagnose_v2_periodic_aliasing.py`; output `experiments/results/diagnose_v2_periodic_aliasing.json`; runtime 194 s.
+
+| Quantity | Full grid | Annulus 12.8 < r ≤ 25.6 mm |
+|---|---|---|
+| Q1 ASM128 against RS51 | 0.13349 (reproduces the registered 0.1335, within 1e-6) | 0.16066 |
+| Q2 ASM256-pad against RS51 (periodic images removed) | 1.35 × 10⁻⁹ | 1.60 × 10⁻⁹ |
+| Q3 ASM at dx/2 against RS51 (input sampling) | 0.13349 | 0.16066 |
+| Q4 ASM128 against ASM256-pad | 0.13349 | — |
+| Q5 ASM128 against ASM at dx/2 | 1.17 × 10⁻⁹ | — |
+
+Band values for Q2 are 7.8 × 10⁻¹⁰ (r ≤ 6.4 mm) and 7.4 × 10⁻¹⁰ (6.4 < r ≤ 12.8 mm). The largest input magnitude on the 128 edge is 1.5 × 10⁻⁷.
+
+**Pre-registered decision rule:** images explain = yes (Q2 ≤ 1e-2 on the full grid and in the annulus); sampling explains = no (Q3 stays at 0.13). **Outcome: periodic images explain the discrepancy.**
+
+**Reading.** The whole V2 discrepancy comes from the periodic FFT window. The same propagation computed on a window twice as large, with no wrap-around, agrees with the Rayleigh–Sommerfeld reference to 1.6 × 10⁻⁹. Input sampling is not a factor: dx and dx/2 agree to 1e-9. The earlier aliasing hypothesis (handoff) is refuted. The finite-window hypothesis stays refuted (CONTRATO-006b addendum 2). The scalar kernel is not at fault for this input.
+
+**Limits and consequences.**
+- CONTRATO-006 V2 stays **fail** as registered. This diagnostic does not change it.
+- For this input, the 51.2 mm periodic window produces a 13 % full-grid error, because the tilted wave moves about 10 mm laterally over d = 18 mm and wraps around. The effect on the D2NN experiments (N = 128, dx = 0.4 mm, their own distances) is **not yet quantified**. Before any D2NN result is published, the zero-padded propagation (C12) must be implemented and the D2NN results checked against it.
+- Scalar model only. Vector effects are not tested here.
