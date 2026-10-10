@@ -37,3 +37,17 @@
 - Script: `experiments/replicate_d2nn_pytorch.py`. Output: `experiments/results/replicate_d2nn_pytorch.json`.
 - Runs on CPU only, float64, no GPU queue use. Expected runtime: seconds.
 - Run with `python -B` and `-p no:cacheprovider` where pytest is involved.
+
+## Result (pre-registered test, run after the commit 70bf8f0)
+
+Script `experiments/replicate_d2nn_pytorch.py`; output `experiments/results/replicate_d2nn_pytorch.json`. CPU, float64.
+
+| Test | Value | Tolerance | Result |
+|---|---|---|---|
+| T1 intensities | 2.5 × 10⁻¹⁴ | 1e-9 | pass |
+| T2 scores | 1.6 × 10⁻¹⁴ | 1e-9 | pass |
+| T3 loss | 5.8 × 10⁻¹⁴ | 1e-10 | pass |
+| T4 gradient against autograd | 5.1 × 10⁻¹⁴ | 1e-8 | pass |
+| T5 gradient against finite differences | 1.4 × 10⁻⁶ | 1e-5 | pass |
+
+**Verdict: PASS.** The two implementations agree to round-off, and the optlab analytic gradient matches central finite differences. This shows the forward model and the gradient are implemented consistently with the stated definitions. It does not test the propagation against an independent physical reference (CONTRATO-006 and its diagnostics).
