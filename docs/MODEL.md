@@ -112,6 +112,8 @@ The gradient is checked against central finite differences in CONTRATO-001.
 
 **Status of CONTRATO-003.** The digit-classification D2NN (3 phase layers, 18 mm spacing, `N = 128`) is in progress. No test accuracy is reported in this document. Validation (DEV) accuracies are preliminary and are not results.
 
+**Update 2026-10-13.** CONTRATO-003 is complete (TEST mean 0.962; H2 not met; see README). The wrap-around effect above was traced to the periodic window (CONTRATO-006c) and shown to change the trained network's DEV accuracy (CONTRATO-010, CONTRATO-011). Section 10 describes the finite-support model that replaces the periodic window for new work.
+
 ## 7. Optical paths and Blender
 
 Blender does not simulate waves. It is used for geometry: the positions of the planes and the medium index of each material.
@@ -137,3 +139,13 @@ For visibility only, the bench planes are enlarged 15 times in x and y in the Bl
 ## 9. Validation contracts
 
 Each numerical check has a contract written before the test is run, with thresholds fixed in advance. A threshold is not relaxed after the result is seen. Amendments made before execution are dated and recorded in the contract. A failure is published with its numerical value. See [CONTRACTS/](CONTRACTS/).
+
+## 10. Finite-support model (neuro3d_completion, 2026-10)
+
+The completion backend keeps the scalar thin-element physics above and changes only the numerical model:
+
+- **Three scales.** `n` physical pixels of pitch `a` (the only parameters: 3·n² phases); refinement `r` tied subpixels per pixel side (sample pitch `a/r`, quadrature of a piecewise-constant element); padding `p` (FFT window `m = n·r·p`).
+- **Exterior.** `aperture`: the field is multiplied by the support indicator at every plane (light that leaves the 51.2 mm support is absorbed); `transparent`: phase layers act only inside the support and the exterior passes light; `periodic`: the historical model, p = 1.
+- **Cell-energy amplitudes.** Inputs carry `u/r` on each subpixel so that the energy Σ|u|² is independent of r; detector scores sum `|f|²` over fixed physical rectangles.
+- **Validation.** Direct Rayleigh–Sommerfeld summation (`validation.rayleigh_sommerfeld`, `pixel_reference`, `rs_network`) is an independent reference without FFT or window. Convergence in `p` and `r` is measured, not assumed (CONTRATO-012): at the D2NN pixel of 0.533 λ, r = 1 is not converged (scores change 270 % from r = 1 to 2), the refinement series has observed order ≈ 2, and r = 16 leaves about 0.5 % in scores.
+- **Out of scope.** Polarisation and vector effects (tested separately in 2D, CONTRATO-015), reflections between planes, dispersion, fabrication tolerances and calibrated detection.

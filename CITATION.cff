@@ -2,8 +2,9 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "Neuro3D-Lab"
 type: software
-abstract: "Virtual optical laboratory: scalar-field propagation, Fresnel diffraction, interferometers and diffractive neural networks (optlab), with a Blender add-on front end."
-version: 0.1.0
+abstract: "Virtual optical laboratory: scalar-field propagation, Fresnel diffraction, interferometers and diffractive neural networks (optlab), a finite-support backend with Rayleigh-Sommerfeld references, convergence estimates and a pre-registered benchmark protocol (neuro3d_completion), and a Blender add-on front end. Simulation only."
+version: 0.2.0-dev
+date-released: 2026-10-13
 license: Apache-2.0
 authors:
   - family-names: "Angulo de Lafuente"
@@ -15,3 +16,5 @@ keywords:
   - angular spectrum
   - diffractive neural networks
   - Blender
+  - finite-support simulation
+  - reproducibility
