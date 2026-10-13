@@ -65,6 +65,17 @@ The contraction budget, the score-error bound β(2‖f‖ε + ε²) and the marg
 
 ## Pending
 
-- Refinement 16 (m = 4096) for a second refinement triplet and order stability.
+- ~~Refinement 16 (m = 4096) for a second refinement triplet and order stability.~~ Done, see the addendum below.
 - Direct RS at full scale (n = 128, q = 3) on trained masks (CONTRATO-014).
 - Vector (Maxwell) validation of the thin-element approximation (guide phase F).
+
+## Addendum (2026-10-13): second refinement triplet 4-8-16
+
+Computed on the RTX 3090 with the lean GPU constructor (`scripts/completion_tools/refinement16.py`; identity with the NumPy path checked: r 1→2 and 2→4 reproduce 2.6977 and 0.2791 on CPU, and r 4→8 on the GPU gives 0.0600 as in `pixel-historical-p2.json`). Historical masks, the two smooth inputs, padding 2, scores only (`evidence/refinement-4-8-16-historical.json`):
+
+| Step | Score change (relative L2) |
+|---|---|
+| r 4 → 8 | 6.0 % |
+| r 8 → 16 | 1.45 % |
+
+Observed order of the 4-8-16 triplet: 2.05 (2-4-8: 2.22). The order is stable near 2, the value expected for midpoint quadrature of piecewise-constant pixels, so the refinement series is in the asymptotic range from r = 4. Estimated remaining score error at r = 16: 0.46 % (GCI 0.58 %); at r = 8: about 1.9 %. A converged simulation of the pixelated element therefore needs r ≥ 8 for scores within 2 %, and r ≈ 16 for 0.5 %.
