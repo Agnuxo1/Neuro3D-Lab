@@ -1,0 +1,7 @@
+[2026-10-10 17:25:37] start: dataset=mnist stage=c1 seed=0
+[2026-10-10 17:29:07] beta=100.0 lr=0.02 seed=0 epoch 1/20: train_loss=2.3073 DEV=0.1345
+[2026-10-10 17:32:40] beta=100.0 lr=0.02 seed=0 epoch 2/20: train_loss=2.3000 DEV=0.0542
+[2026-10-10 17:36:06] beta=100.0 lr=0.02 seed=0 epoch 3/20: train_loss=2.2978 DEV=0.1204
+[2026-10-10 17:39:35] beta=100.0 lr=0.02 seed=0 epoch 4/20: train_loss=2.2958 DEV=0.1701
+[2026-10-10 17:43:13] beta=100.0 lr=0.02 seed=0 epoch 5/20: train_loss=2.2949 DEV=0.1208
+[2026-10-10 17:46:55] beta=100.0 lr=0.02 seed=0 epoch 6/20: train_loss=2.2938 DEV=0.1014

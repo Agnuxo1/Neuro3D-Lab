@@ -98,6 +98,12 @@ class OPTLAB_OT_run_bench(bpy.types.Operator):
         return {"FINISHED"}
 
 
+# Versioned callback (completion guide, phase G): without numerical_config.json it calls
+# optlab.bench.simulate_bench exactly as before; with it, the finite-support backend.
+from . import completion_operator  # noqa: E402
+OPTLAB_OT_run_bench.execute = completion_operator.execute
+
+
 class OPTLAB_PT_panel(bpy.types.Panel):
     bl_label = "Neuro3D Lab"
     bl_idname = "OPTLAB_PT_panel"

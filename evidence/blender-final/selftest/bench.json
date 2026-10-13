@@ -1,0 +1,60 @@
+{
+  "schema": "optlab.bench/1",
+  "wavelength_m": 6.33e-07,
+  "grid": {
+    "n": 256,
+    "pixel_m": 8e-06
+  },
+  "source": {
+    "z_m": 0.0
+  },
+  "layers": [
+    {
+      "name": "LAYER_1",
+      "z_m": 0.02,
+      "n_medium": 1.0,
+      "n_material": 1.5,
+      "kappa": 0.0,
+      "height_npy": "LAYER_1_height.npy",
+      "height_max_m": 1e-06
+    },
+    {
+      "name": "LAYER_2",
+      "z_m": 0.04,
+      "n_medium": 1.0,
+      "n_material": 1.5,
+      "kappa": 0.0,
+      "height_npy": "LAYER_2_height.npy",
+      "height_max_m": 1e-06
+    }
+  ],
+  "detector": {
+    "z_m": 0.055,
+    "regions": [
+      {
+        "label": 0,
+        "cx_m": -0.000512,
+        "cy_m": 0.0,
+        "w_m": 0.0004096,
+        "h_m": 0.0004096
+      },
+      {
+        "label": 1,
+        "cx_m": 0.0,
+        "cy_m": 0.000512,
+        "w_m": 0.0004096,
+        "h_m": 0.0004096
+      },
+      {
+        "label": 2,
+        "cx_m": 0.000512,
+        "cy_m": 0.0,
+        "w_m": 0.0004096,
+        "h_m": 0.0004096
+      }
+    ]
+  },
+  "output": {
+    "intensity_npy": "detector_intensity.npy"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "n": 10000,
+  "alpha": 0.05,
+  "power": 0.8,
+  "family": 5,
+  "rows": [
+    {
+      "discordance": 0.02,
+      "mde": 0.0040429687500000006,
+      "mde_holm_worst_case": 0.004902343750000001
+    },
+    {
+      "discordance": 0.04,
+      "mde": 0.005693359375,
+      "mde_holm_worst_case": 0.0069140625
+    },
+    {
+      "discordance": 0.06,
+      "mde": 0.006958007812499999,
+      "mde_holm_worst_case": 0.008459472656250001
+    },
+    {
+      "discordance": 0.08,
+      "mde": 0.008017578124999999,
+      "mde_holm_worst_case": 0.009755859375000002
+    },
+    {
+      "discordance": 0.1,
+      "mde": 0.008953857421875001,
+      "mde_holm_worst_case": 0.010894775390625002
+    }
+  ],
+  "accuracy_halfwidth_at_0_95": 0.004274316576219696
+}

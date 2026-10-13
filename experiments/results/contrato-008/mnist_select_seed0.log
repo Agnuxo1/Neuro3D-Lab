@@ -1,0 +1,40 @@
+[2026-10-10 12:32:07] start: dataset=mnist stage=select seed=0
+[2026-10-10 12:33:52] beta=20.0 lr=0.02 seed=0 epoch 1/5: train_loss=1.5837 DEV=0.7795
+[2026-10-10 12:34:58] beta=20.0 lr=0.02 seed=0 epoch 2/5: train_loss=1.2487 DEV=0.7849
+[2026-10-10 12:36:00] beta=20.0 lr=0.02 seed=0 epoch 3/5: train_loss=1.1897 DEV=0.8160
+[2026-10-10 12:36:59] beta=20.0 lr=0.02 seed=0 epoch 4/5: train_loss=1.1587 DEV=0.8119
+[2026-10-10 12:38:47] beta=20.0 lr=0.02 seed=0 epoch 5/5: train_loss=1.1379 DEV=0.8118
+[2026-10-10 12:38:47] SELECT beta=20.0 lr=0.02: DEV=0.8118
+[2026-10-10 12:40:15] beta=20.0 lr=0.05 seed=0 epoch 1/5: train_loss=1.4138 DEV=0.7909
+[2026-10-10 12:41:38] beta=20.0 lr=0.05 seed=0 epoch 2/5: train_loss=1.1718 DEV=0.8022
+[2026-10-10 12:42:59] beta=20.0 lr=0.05 seed=0 epoch 3/5: train_loss=1.1297 DEV=0.8183
+[2026-10-10 12:44:22] beta=20.0 lr=0.05 seed=0 epoch 4/5: train_loss=1.1055 DEV=0.8023
+[2026-10-10 12:45:34] beta=20.0 lr=0.05 seed=0 epoch 5/5: train_loss=1.0874 DEV=0.8180
+[2026-10-10 12:45:34] SELECT beta=20.0 lr=0.05: DEV=0.8180
+[2026-10-10 12:46:46] beta=50.0 lr=0.02 seed=0 epoch 1/5: train_loss=1.0745 DEV=0.8642
+[2026-10-10 12:47:56] beta=50.0 lr=0.02 seed=0 epoch 2/5: train_loss=0.6550 DEV=0.8674
+[2026-10-10 12:49:10] beta=50.0 lr=0.02 seed=0 epoch 3/5: train_loss=0.5966 DEV=0.8821
+[2026-10-10 12:50:18] beta=50.0 lr=0.02 seed=0 epoch 4/5: train_loss=0.5687 DEV=0.8860
+[2026-10-10 12:51:33] beta=50.0 lr=0.02 seed=0 epoch 5/5: train_loss=0.5493 DEV=0.8922
+[2026-10-10 12:51:33] SELECT beta=50.0 lr=0.02: DEV=0.8922
+[2026-10-10 12:52:40] beta=50.0 lr=0.05 seed=0 epoch 1/5: train_loss=0.8636 DEV=0.8738
+[2026-10-10 12:53:51] beta=50.0 lr=0.05 seed=0 epoch 2/5: train_loss=0.5977 DEV=0.8789
+[2026-10-10 12:54:59] beta=50.0 lr=0.05 seed=0 epoch 3/5: train_loss=0.5610 DEV=0.8727
+[2026-10-10 12:56:11] beta=50.0 lr=0.05 seed=0 epoch 4/5: train_loss=0.5438 DEV=0.8776
+[2026-10-10 12:57:21] beta=50.0 lr=0.05 seed=0 epoch 5/5: train_loss=0.5287 DEV=0.8895
+[2026-10-10 12:57:21] SELECT beta=50.0 lr=0.05: DEV=0.8895
+[2026-10-10 12:58:34] beta=100.0 lr=0.02 seed=0 epoch 1/5: train_loss=0.7594 DEV=0.9007
+[2026-10-10 12:59:52] beta=100.0 lr=0.02 seed=0 epoch 2/5: train_loss=0.4031 DEV=0.9054
+[2026-10-10 13:01:04] beta=100.0 lr=0.02 seed=0 epoch 3/5: train_loss=0.3611 DEV=0.9057
+[2026-10-10 13:02:16] beta=100.0 lr=0.02 seed=0 epoch 4/5: train_loss=0.3408 DEV=0.9156
+[2026-10-10 13:03:23] beta=100.0 lr=0.02 seed=0 epoch 5/5: train_loss=0.3244 DEV=0.9157
+[2026-10-10 13:03:23] SELECT beta=100.0 lr=0.02: DEV=0.9157
+[2026-10-10 13:04:31] beta=100.0 lr=0.05 seed=0 epoch 1/5: train_loss=0.5883 DEV=0.8988
+[2026-10-10 13:05:36] beta=100.0 lr=0.05 seed=0 epoch 2/5: train_loss=0.3731 DEV=0.9085
+[2026-10-10 13:06:40] beta=100.0 lr=0.05 seed=0 epoch 3/5: train_loss=0.3520 DEV=0.8969
+[2026-10-10 13:07:46] beta=100.0 lr=0.05 seed=0 epoch 4/5: train_loss=0.3366 DEV=0.9091
+[2026-10-10 13:08:46] beta=100.0 lr=0.05 seed=0 epoch 5/5: train_loss=0.3234 DEV=0.9126
+[2026-10-10 13:08:46] SELECT beta=100.0 lr=0.05: DEV=0.9126
+[2026-10-10 13:08:46] SELECTED {'beta': 100.0, 'lr': 0.02, 'dev_acc': 0.9157, 'edge': {'beta': True, 'lr': True, 'any': True}} (on a grid edge: report as a limitation, grid not extended)
+[2026-10-10 13:08:46] summary written: D:\PROJECTS\Neuro3D-Lab\experiments\results\mnist_fashion_summary.json
+[2026-10-10 13:08:46] done in 2199 s

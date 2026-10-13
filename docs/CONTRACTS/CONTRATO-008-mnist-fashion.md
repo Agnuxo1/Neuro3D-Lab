@@ -158,3 +158,18 @@ None yet. No script has been run. Pre-registration commit: to be recorded.
 ## Gate T0 (added before any run of this contract)
 
 Before any training, the batched torch propagation must match optlab at N = 128. Script `experiments/check_torch_vs_optlab_n128.py`, output `experiments/results/check_torch_vs_optlab_n128.json`. It uses the thresholds of CONTRATO-009: intensities 1e-9, scores 1e-9, loss 1e-10, gradient 1e-8 (relative or absolute as there). The run on 2026-10-10 gave intensities 4.3e-14, scores 4.2e-15, loss 3.1e-15 and gradient 5.8e-14: **PASS**. The MNIST and Fashion runs refuse to start unless this gate has passed for the current code. No TEST data is used by the gate.
+
+## Results archived on 2026-10-13 (run of 2026-10-10, interrupted and incomplete)
+
+The run was made on 2026-10-10 under this contract and was not committed at the time. Its local outputs are archived unchanged in `experiments/results/contrato-008/` (checksums in `SHA256SUMS.txt`) and the summary written by the run is `experiments/results/mnist_fashion_summary.json`. Nothing was re-run or edited for this archive.
+
+**Completeness.** Selection, D2NN final seeds 0–2 and baseline seed 0 finished for both datasets. Baseline seeds 1–2 were not run. The permuted-label control C1 was interrupted at epoch 6 of 20 on both datasets (`*_c1.log`) and has no result. The contract is therefore **incomplete**; H1, H2 and C1 cannot be decided as registered. It is not completed now because its periodic-window model is superseded (CONTRATO-010, CONTRATO-011, CONTRATO-013); the decision was put to JEV (provenance `jev`, 0.49, indifferent) and the archive was preferred to new runs under a superseded model.
+
+| Dataset | D2NN TEST (seeds 0, 1, 2) | D2NN mean (sample SD) | logreg s0 | mlp12 s0 | mlp128 s0 | cnn s0 |
+|---|---|---|---|---|---|---|
+| MNIST | 0.9321, 0.9332, 0.9348 | 0.9334 (0.0014) | 0.9276 | 0.9341 | 0.9766 | 0.9791 |
+| Fashion-MNIST | 0.8188, 0.8274, 0.8291 | 0.8251 (0.0055) | 0.8387 | 0.8413 | 0.8761 | 0.8916 |
+
+Seed-0 exact McNemar with Holm over four baselines (from the summary): on MNIST the D2NN beats logreg (Holm p = 0.047) and does not beat mlp12, mlp128 or cnn; on Fashion-MNIST it beats none. Selected D2NN setting β = 100, lr = 0.02 on both datasets, on the edge of both grids (limitation recorded by the run).
+
+**Consequences.** (1) All D2NN numbers above use the periodic window that CONTRATO-010/011 found material; they are historical. (2) The official MNIST and Fashion-MNIST TEST10K files were examined by this run, so later protocols must treat them as re-used tests (CONTRATO-013).

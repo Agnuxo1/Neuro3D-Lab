@@ -1,0 +1,39 @@
+{
+ "mode": "v2-query",
+ "exit_code": 0,
+ "provenance": "jev",
+ "status": "connected",
+ "connected": null,
+ "configured": null,
+ "model": "jev-1.13.0",
+ "decision_source": null,
+ "error_type": null,
+ "decisions": {
+  "protocol": {
+   "value": "a",
+   "confidence": 0.85
+  },
+  "fidelity_core": {
+   "value": 0.38,
+   "confidence": null
+  },
+  "complete_c008": {
+   "value": 0.49,
+   "confidence": null
+  },
+  "fashion_reuse": {
+   "value": 0.64,
+   "confidence": null
+  },
+  "need_second_opinion": {
+   "value": 0.56,
+   "confidence": null
+  }
+ },
+ "usage": {
+  "input_tokens": 1423,
+  "output_tokens": 124,
+  "cached_tokens": 0
+ },
+ "remote_decision": true
+}

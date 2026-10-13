@@ -1,0 +1,7 @@
+[2026-10-10 17:25:37] start: dataset=fashion stage=c1 seed=0
+[2026-10-10 17:29:06] beta=100.0 lr=0.02 seed=0 epoch 1/20: train_loss=2.3086 DEV=0.1620
+[2026-10-10 17:32:38] beta=100.0 lr=0.02 seed=0 epoch 2/20: train_loss=2.3042 DEV=0.2020
+[2026-10-10 17:36:05] beta=100.0 lr=0.02 seed=0 epoch 3/20: train_loss=2.3026 DEV=0.0286
+[2026-10-10 17:39:33] beta=100.0 lr=0.02 seed=0 epoch 4/20: train_loss=2.3019 DEV=0.0498
+[2026-10-10 17:43:09] beta=100.0 lr=0.02 seed=0 epoch 5/20: train_loss=2.3011 DEV=0.0992
+[2026-10-10 17:46:51] beta=100.0 lr=0.02 seed=0 epoch 6/20: train_loss=2.3006 DEV=0.1852

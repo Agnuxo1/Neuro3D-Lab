@@ -1,0 +1,17 @@
+Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:33:49)
+Info: Exported D:\PROJECTS\.cognition\neuro3d-lab\blender-completion-20261013\completion_selftest\bench.json
+Info: Simulation finished
+Info: Simulation finished
+Error: Simulation failed: numerical_config.json must contain exactly the four numerical settings
+SELFTEST_RESULTS {
+ "register_and_export": "PASS",
+ "legacy_path_without_sidecar": "PASS",
+ "bundled_backend": "PASS",
+ "periodic_identity_with_legacy": "PASS",
+ "finite_support_with_sidecar": "PASS",
+ "import_new_intensity": "PASS",
+ "deliberate_failure_bad_sidecar": "PASS",
+ "unregister": "PASS"
+}
+PERIODIC_IDENTITY 7.822519740818624e-16
+SELFTEST_COUNT 8/8 PASS

@@ -1,0 +1,7 @@
+{
+  "source": "data/mnist-writer/dev.npz",
+  "source_sha256": "d50edbdaa9b85563a3062b5cabac95b8a18369e226434867b3b6cf4b1152ac09",
+  "rows": "0:64",
+  "subset_sha256": "567a2615fcbe058331666712d6f4c51103695f832bef488b5be7c3688297e9d2",
+  "purpose": "numerical convergence inputs only (DEV); not used for selection"
+}

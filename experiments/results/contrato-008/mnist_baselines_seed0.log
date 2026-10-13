@@ -1,0 +1,93 @@
+[2026-10-10 17:48:24] start: dataset=mnist stage=baselines seed=0
+[2026-10-10 17:48:38] logreg seed=0 epoch 1/20: train_loss=0.7969 DEV=0.8948
+[2026-10-10 17:48:44] logreg seed=0 epoch 2/20: train_loss=0.4066 DEV=0.9117
+[2026-10-10 17:48:51] logreg seed=0 epoch 3/20: train_loss=0.3491 DEV=0.9169
+[2026-10-10 17:48:58] logreg seed=0 epoch 4/20: train_loss=0.3236 DEV=0.9199
+[2026-10-10 17:49:13] logreg seed=0 epoch 5/20: train_loss=0.3089 DEV=0.9209
+[2026-10-10 17:49:27] logreg seed=0 epoch 6/20: train_loss=0.2989 DEV=0.9215
+[2026-10-10 17:49:53] logreg seed=0 epoch 7/20: train_loss=0.2918 DEV=0.9228
+[2026-10-10 17:50:17] logreg seed=0 epoch 8/20: train_loss=0.2865 DEV=0.9255
+[2026-10-10 17:50:34] logreg seed=0 epoch 9/20: train_loss=0.2822 DEV=0.9257
+[2026-10-10 17:50:46] logreg seed=0 epoch 10/20: train_loss=0.2784 DEV=0.9267
+[2026-10-10 17:50:55] logreg seed=0 epoch 11/20: train_loss=0.2753 DEV=0.9281
+[2026-10-10 17:51:11] logreg seed=0 epoch 12/20: train_loss=0.2727 DEV=0.9282
+[2026-10-10 17:51:21] logreg seed=0 epoch 13/20: train_loss=0.2705 DEV=0.9292
+[2026-10-10 17:51:29] logreg seed=0 epoch 14/20: train_loss=0.2683 DEV=0.9288
+[2026-10-10 17:51:41] logreg seed=0 epoch 15/20: train_loss=0.2666 DEV=0.9299
+[2026-10-10 17:51:50] logreg seed=0 epoch 16/20: train_loss=0.2647 DEV=0.9289
+[2026-10-10 17:51:59] logreg seed=0 epoch 17/20: train_loss=0.2632 DEV=0.9293
+[2026-10-10 17:52:08] logreg seed=0 epoch 18/20: train_loss=0.2619 DEV=0.9303
+[2026-10-10 17:52:17] logreg seed=0 epoch 19/20: train_loss=0.2605 DEV=0.9312
+[2026-10-10 17:52:23] logreg seed=0 epoch 20/20: train_loss=0.2595 DEV=0.9320
+[2026-10-10 17:52:32] mlp12 seed=0 epoch 1/20: train_loss=0.7582 DEV=0.8979
+[2026-10-10 17:52:41] mlp12 seed=0 epoch 2/20: train_loss=0.3526 DEV=0.9172
+[2026-10-10 17:52:49] mlp12 seed=0 epoch 3/20: train_loss=0.3087 DEV=0.9209
+[2026-10-10 17:52:58] mlp12 seed=0 epoch 4/20: train_loss=0.2877 DEV=0.9255
+[2026-10-10 17:53:06] mlp12 seed=0 epoch 5/20: train_loss=0.2744 DEV=0.9281
+[2026-10-10 17:53:12] mlp12 seed=0 epoch 6/20: train_loss=0.2642 DEV=0.9315
+[2026-10-10 17:53:19] mlp12 seed=0 epoch 7/20: train_loss=0.2564 DEV=0.9315
+[2026-10-10 17:53:25] mlp12 seed=0 epoch 8/20: train_loss=0.2500 DEV=0.9347
+[2026-10-10 17:53:32] mlp12 seed=0 epoch 9/20: train_loss=0.2443 DEV=0.9353
+[2026-10-10 17:53:38] mlp12 seed=0 epoch 10/20: train_loss=0.2386 DEV=0.9359
+[2026-10-10 17:53:45] mlp12 seed=0 epoch 11/20: train_loss=0.2336 DEV=0.9378
+[2026-10-10 17:53:51] mlp12 seed=0 epoch 12/20: train_loss=0.2294 DEV=0.9372
+[2026-10-10 17:53:57] mlp12 seed=0 epoch 13/20: train_loss=0.2253 DEV=0.9389
+[2026-10-10 17:54:04] mlp12 seed=0 epoch 14/20: train_loss=0.2217 DEV=0.9374
+[2026-10-10 17:54:11] mlp12 seed=0 epoch 15/20: train_loss=0.2183 DEV=0.9404
+[2026-10-10 17:54:17] mlp12 seed=0 epoch 16/20: train_loss=0.2147 DEV=0.9392
+[2026-10-10 17:54:23] mlp12 seed=0 epoch 17/20: train_loss=0.2120 DEV=0.9383
+[2026-10-10 17:54:30] mlp12 seed=0 epoch 18/20: train_loss=0.2096 DEV=0.9419
+[2026-10-10 17:54:36] mlp12 seed=0 epoch 19/20: train_loss=0.2067 DEV=0.9412
+[2026-10-10 17:54:42] mlp12 seed=0 epoch 20/20: train_loss=0.2047 DEV=0.9422
+[2026-10-10 17:54:59] mlp128 seed=0 epoch 1/20: train_loss=0.4282 DEV=0.9315
+[2026-10-10 17:55:21] mlp128 seed=0 epoch 2/20: train_loss=0.2134 DEV=0.9538
+[2026-10-10 17:55:43] mlp128 seed=0 epoch 3/20: train_loss=0.1552 DEV=0.9603
+[2026-10-10 17:56:07] mlp128 seed=0 epoch 4/20: train_loss=0.1231 DEV=0.9643
+[2026-10-10 17:56:30] mlp128 seed=0 epoch 5/20: train_loss=0.1016 DEV=0.9682
+[2026-10-10 17:56:52] mlp128 seed=0 epoch 6/20: train_loss=0.0850 DEV=0.9710
+[2026-10-10 17:57:15] mlp128 seed=0 epoch 7/20: train_loss=0.0729 DEV=0.9717
+[2026-10-10 17:57:38] mlp128 seed=0 epoch 8/20: train_loss=0.0629 DEV=0.9719
+[2026-10-10 17:58:00] mlp128 seed=0 epoch 9/20: train_loss=0.0547 DEV=0.9748
+[2026-10-10 17:58:24] mlp128 seed=0 epoch 10/20: train_loss=0.0475 DEV=0.9758
+[2026-10-10 17:58:48] mlp128 seed=0 epoch 11/20: train_loss=0.0417 DEV=0.9736
+[2026-10-10 17:59:16] mlp128 seed=0 epoch 12/20: train_loss=0.0374 DEV=0.9750
+[2026-10-10 17:59:47] mlp128 seed=0 epoch 13/20: train_loss=0.0324 DEV=0.9766
+[2026-10-10 18:00:11] mlp128 seed=0 epoch 14/20: train_loss=0.0289 DEV=0.9764
+[2026-10-10 18:00:35] mlp128 seed=0 epoch 15/20: train_loss=0.0254 DEV=0.9766
+[2026-10-10 18:00:58] mlp128 seed=0 epoch 16/20: train_loss=0.0231 DEV=0.9781
+[2026-10-10 18:01:19] mlp128 seed=0 epoch 17/20: train_loss=0.0192 DEV=0.9780
+[2026-10-10 18:01:43] mlp128 seed=0 epoch 18/20: train_loss=0.0181 DEV=0.9757
+[2026-10-10 18:02:06] mlp128 seed=0 epoch 19/20: train_loss=0.0162 DEV=0.9777
+[2026-10-10 18:02:29] mlp128 seed=0 epoch 20/20: train_loss=0.0137 DEV=0.9785
+[2026-10-10 18:03:58] cnn seed=0 epoch 1/20: train_loss=0.5407 DEV=0.9228
+[2026-10-10 18:05:53] cnn seed=0 epoch 2/20: train_loss=0.2659 DEV=0.9482
+[2026-10-10 18:07:59] cnn seed=0 epoch 3/20: train_loss=0.1778 DEV=0.9640
+[2026-10-10 18:24:49] cnn seed=0 epoch 4/20: train_loss=0.1207 DEV=0.9713
+[2026-10-10 18:26:58] cnn seed=0 epoch 5/20: train_loss=0.0930 DEV=0.9771
+[2026-10-10 18:29:34] cnn seed=0 epoch 6/20: train_loss=0.0750 DEV=0.9785
+[2026-10-10 18:31:57] cnn seed=0 epoch 7/20: train_loss=0.0637 DEV=0.9790
+[2026-10-10 18:35:43] cnn seed=0 epoch 8/20: train_loss=0.0563 DEV=0.9775
+[2026-10-10 18:39:17] cnn seed=0 epoch 9/20: train_loss=0.0493 DEV=0.9808
+[2026-10-10 18:42:33] cnn seed=0 epoch 10/20: train_loss=0.0452 DEV=0.9821
+[2026-10-10 18:46:07] cnn seed=0 epoch 11/20: train_loss=0.0412 DEV=0.9778
+[2026-10-10 18:49:27] cnn seed=0 epoch 12/20: train_loss=0.0384 DEV=0.9806
+[2026-10-10 18:53:17] cnn seed=0 epoch 13/20: train_loss=0.0351 DEV=0.9813
+[2026-10-10 18:55:53] cnn seed=0 epoch 14/20: train_loss=0.0331 DEV=0.9800
+[2026-10-10 18:59:11] cnn seed=0 epoch 15/20: train_loss=0.0312 DEV=0.9814
+[2026-10-10 19:02:16] cnn seed=0 epoch 16/20: train_loss=0.0290 DEV=0.9810
+[2026-10-10 19:04:36] cnn seed=0 epoch 17/20: train_loss=0.0269 DEV=0.9820
+[2026-10-10 19:07:26] cnn seed=0 epoch 18/20: train_loss=0.0251 DEV=0.9792
+[2026-10-10 19:10:19] cnn seed=0 epoch 19/20: train_loss=0.0239 DEV=0.9783
+[2026-10-10 19:12:43] cnn seed=0 epoch 20/20: train_loss=0.0221 DEV=0.9791
+[2026-10-10 19:12:44] TEST claimed for logreg (marker test_done_mnist_logreg_seed0.marker)
+[2026-10-10 19:12:44] TEST claimed for mlp12 (marker test_done_mnist_mlp12_seed0.marker)
+[2026-10-10 19:12:44] TEST claimed for mlp128 (marker test_done_mnist_mlp128_seed0.marker)
+[2026-10-10 19:12:44] TEST claimed for cnn (marker test_done_mnist_cnn_seed0.marker)
+[2026-10-10 19:12:45] TEST logreg seed 0: 0.9276
+[2026-10-10 19:12:46] TEST mlp12 seed 0: 0.9341
+[2026-10-10 19:12:48] TEST mlp128 seed 0: 0.9766
+[2026-10-10 19:12:54] TEST cnn seed 0: 0.9791
+[2026-10-10 19:12:58] summary written: D:\PROJECTS\Neuro3D-Lab\experiments\results\mnist_fashion_summary.json
+[2026-10-10 19:12:59] done in 5075 s
+ D:\PROJECTS\Neuro3D-Lab\experiments\results\mnist_fashion_summary.json
+[2026-10-10 19:12:59] done in 5075 s

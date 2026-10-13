@@ -1,0 +1,54 @@
+{
+  "study_id": "NEURO3D-CLOSURE-MNIST-WRITER-2026-V2-P4R1",
+  "data_dir": "../data/mnist-writer",
+  "epochs": 20,
+  "batch": 16,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "optics": {
+    "n": 128,
+    "pixel_m": 0.0004,
+    "wavelength_m": 0.00075,
+    "distances_m": [
+      0.018,
+      0.018,
+      0.018,
+      0.018
+    ],
+    "padding": 4,
+    "refinement": 1,
+    "boundary": "aperture",
+    "filter_mode": "none"
+  },
+  "beta_grid": [
+    100,
+    200,
+    400
+  ],
+  "optical_lr_grid": [
+    0.02,
+    0.05
+  ],
+  "digital_lr_grid": [
+    0.001,
+    0.003
+  ],
+  "hypotheses": {
+    "mean_accuracy_min": 0.9,
+    "seed_accuracy_min": 0.88,
+    "alpha": 0.05,
+    "permuted_accuracy_max": 0.15,
+    "untrained_accuracy_max": 0.2,
+    "no_layer_accuracy_max": 0.2
+  }
+}

@@ -277,4 +277,5 @@ def _():
 print("SELFTEST_RESULTS " + json.dumps(results, indent=1))
 n_pass = sum(1 for v in results.values() if v == "PASS")
 print(f"SELFTEST_COUNT {n_pass}/{len(results)} PASS")
-sys.exit(1 if any(v.startswith("FAIL") for v in results.values()) else 0)
+# Every step must PASS; a PENDING step is not a success (completion guide, G-13).
+sys.exit(0 if results and all(v == "PASS" for v in results.values()) else 1)

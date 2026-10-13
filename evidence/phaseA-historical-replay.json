@@ -1,0 +1,45 @@
+{
+  "replay_commit": "e5ebb985628dad983541c8f41da117a30e641497",
+  "files": {
+    "experiments/results/validation_summary.json": {
+      "historical_sha256": "6bada948f8f9863a7bd89e9751ee62d990b10303a36b88dffc42279af399ed7b",
+      "replayed_sha256": "386ad05e969054e8d120e9a3dc41cf244a96409b56187e414ce7136d163055ee",
+      "byte_identical": false,
+      "numeric_leaves": 0,
+      "max_abs_difference": 0.0,
+      "max_rel_difference": 0.0,
+      "non_numeric_mismatches": [],
+      "mismatch_count": 0
+    },
+    "experiments/results/negative_control.json": {
+      "historical_sha256": "7b4a55004ede7f6e767d5814b70ed45b5ce65102b701e4066efa25d96a34c77d",
+      "replayed_sha256": "9023271f59f2cf2a3e99692dc9cda2e242cf33fce2d1cb9312ccc212befaf762",
+      "byte_identical": false,
+      "numeric_leaves": 20,
+      "max_abs_difference": 0.0,
+      "max_rel_difference": 0.0,
+      "non_numeric_mismatches": [],
+      "mismatch_count": 0
+    },
+    "experiments/results/c12_periodic_dev_d2nn.json": {
+      "historical_sha256": "1f425af6a0a5374fc828a650b71e52e6bf9577fbc2afd8c945993381fbc1abe2",
+      "replayed_sha256": "9c50371458b8d49f03fabc7de88c928648dd3c22ccbd8f105ad0d12213b3812b",
+      "byte_identical": false,
+      "numeric_leaves": 27,
+      "max_abs_difference": 10.600000000000001,
+      "max_rel_difference": 0.2969187675070028,
+      "non_numeric_mismatches": [],
+      "mismatch_count": 0
+    },
+    "experiments/results/c12b_aperture_dev_d2nn.json": {
+      "historical_sha256": "44540f8158a59a504f85864ff8430413c6c07df6f15c8efa518bb54237792984",
+      "replayed_sha256": "ce0985dcc6b382fe5ba8803addffe1363e687e59f1ec315b14c4d7e52f26e792",
+      "byte_identical": false,
+      "numeric_leaves": 24,
+      "max_abs_difference": 50.699999999999996,
+      "max_rel_difference": 0.66015625,
+      "non_numeric_mismatches": [],
+      "mismatch_count": 0
+    }
+  }
+}

@@ -1,0 +1,27 @@
+[2026-10-10 16:14:59] start: dataset=fashion stage=final seed=2
+[2026-10-10 16:18:44] beta=100.0 lr=0.02 seed=2 epoch 1/20: train_loss=0.6296 DEV=0.8081
+[2026-10-10 16:22:37] beta=100.0 lr=0.02 seed=2 epoch 2/20: train_loss=0.5211 DEV=0.8181
+[2026-10-10 16:26:08] beta=100.0 lr=0.02 seed=2 epoch 3/20: train_loss=0.5054 DEV=0.8262
+[2026-10-10 16:29:34] beta=100.0 lr=0.02 seed=2 epoch 4/20: train_loss=0.4982 DEV=0.8250
+[2026-10-10 16:33:01] beta=100.0 lr=0.02 seed=2 epoch 5/20: train_loss=0.4949 DEV=0.8304
+[2026-10-10 16:36:32] beta=100.0 lr=0.02 seed=2 epoch 6/20: train_loss=0.4872 DEV=0.8338
+[2026-10-10 16:40:14] beta=100.0 lr=0.02 seed=2 epoch 7/20: train_loss=0.4879 DEV=0.8109
+[2026-10-10 16:43:37] beta=100.0 lr=0.02 seed=2 epoch 8/20: train_loss=0.4817 DEV=0.8259
+[2026-10-10 16:47:12] beta=100.0 lr=0.02 seed=2 epoch 9/20: train_loss=0.4822 DEV=0.8211
+[2026-10-10 16:50:56] beta=100.0 lr=0.02 seed=2 epoch 10/20: train_loss=0.4794 DEV=0.8320
+[2026-10-10 16:54:19] beta=100.0 lr=0.02 seed=2 epoch 11/20: train_loss=0.4777 DEV=0.8190
+[2026-10-10 16:57:55] beta=100.0 lr=0.02 seed=2 epoch 12/20: train_loss=0.4786 DEV=0.8114
+[2026-10-10 17:01:35] beta=100.0 lr=0.02 seed=2 epoch 13/20: train_loss=0.4759 DEV=0.8107
+[2026-10-10 17:05:17] beta=100.0 lr=0.02 seed=2 epoch 14/20: train_loss=0.4753 DEV=0.8050
+[2026-10-10 17:08:51] beta=100.0 lr=0.02 seed=2 epoch 15/20: train_loss=0.4734 DEV=0.8280
+[2026-10-10 17:12:11] beta=100.0 lr=0.02 seed=2 epoch 16/20: train_loss=0.4739 DEV=0.8228
+[2026-10-10 17:15:29] beta=100.0 lr=0.02 seed=2 epoch 17/20: train_loss=0.4710 DEV=0.8310
+[2026-10-10 17:18:51] beta=100.0 lr=0.02 seed=2 epoch 18/20: train_loss=0.4742 DEV=0.8046
+[2026-10-10 17:22:13] beta=100.0 lr=0.02 seed=2 epoch 19/20: train_loss=0.4713 DEV=0.8312
+[2026-10-10 17:24:57] beta=100.0 lr=0.02 seed=2 epoch 20/20: train_loss=0.4718 DEV=0.8343
+[2026-10-10 17:24:58] TEST claimed for d2nn (marker test_done_fashion_d2nn_seed2.marker)
+[2026-10-10 17:25:08] TEST d2nn seed 2: 0.8291
+[2026-10-10 17:25:09] summary written: D:\PROJECTS\Neuro3D-Lab\experiments\results\mnist_fashion_summary.json
+[2026-10-10 17:25:09] done in 4210 s
+ D:\PROJECTS\Neuro3D-Lab\experiments\results\mnist_fashion_summary.json
+[2026-10-10 17:25:09] done in 4210 s
