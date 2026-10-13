@@ -20,3 +20,7 @@ Output defaults to Blender user DATAFILES, rather than a location derived from t
 - ZIP: 24 entries, no bytecode or self-test files. SHA-256: `f5937c54315ea1e1aba42acc0dd244679da00296e99bd3173aa49a412b6910d6`.
 
 Logs and summary: `evidence/blender-review-20261013/`. Upload hash shown by Blender Extensions matches the local ZIP. Version URL: https://extensions.blender.org/add-ons/neuro3d-lab/versions/#v021 . Website description is English with a Spanish summary; release notes are English. Approval is pending.
+
+Reviewer response posted and verified: https://extensions.blender.org/approval-queue/neuro3d-lab/#activity-23179 . Status: Awaiting Review. Source change: GitHub PR #1 (open).
+
+The pre-existing `tests` workflow failed while collecting completion tests because it installed only the legacy development dependencies (`ModuleNotFoundError: torch`, run 38397862383). Its setup now matches the existing completion workflow: test/example extras plus CPU Torch. This CI-only change does not modify the uploaded ZIP.

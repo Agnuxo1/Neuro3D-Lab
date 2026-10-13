@@ -25,8 +25,11 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
 
-      - name: Install optlab with dev extras
-        run: pip install -e ".[dev]"
+      - name: Install optlab with test and example dependencies
+        run: python -m pip install -e ".[dev,experiments,figures]"
+
+      - name: Install CPU Torch for completion tests
+        run: python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
 
       - name: Run tests
         run: pytest -q
