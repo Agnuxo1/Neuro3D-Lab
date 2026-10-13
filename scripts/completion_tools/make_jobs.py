@@ -3,9 +3,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
+import sys
 
-PY = "D:/PROJECTS/venvs/neuro3d-lab-completion/Scripts/python.exe"
+# Interpreter of the job commands: $NEURO3D_PYTHON, else the interpreter running this script.
+PY = os.environ.get("NEURO3D_PYTHON", sys.executable)
 DIGITAL = ("linear", "mlp12", "mlp128", "cnn", "quadratic12")
 OPTICAL = ("d2nn", "permuted", "untrained", "no_layers")
 SEEDS = range(10)

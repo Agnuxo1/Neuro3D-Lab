@@ -20,7 +20,8 @@ import subprocess
 import sys
 import time
 
-GPUQ = "D:/PROJECTS/.cognition/gpu_queue/gpuq.py"
+# The workstation FIFO queue; set $NEURO3D_GPUQ elsewhere (the default is the owner's workstation).
+GPUQ = os.environ.get("NEURO3D_GPUQ", "D:/PROJECTS/.cognition/gpu_queue/gpuq.py")
 
 
 def free_ram_gb():
