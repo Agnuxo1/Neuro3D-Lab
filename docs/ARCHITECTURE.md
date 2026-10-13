@@ -126,3 +126,10 @@ Large or raw outputs stay outside the repository. Only small summaries are commi
 ## Why not Cycles or Eevee
 
 Cycles and Eevee trace rays or rasterise, but they do not keep coherent phase along paths. An interferometer or a diffractive network must add complex fields with their phase. That is why Blender provides the geometry and the visualisation, and `optlab` computes the field.
+
+## Finite-support backend and completion tooling (2026-10)
+
+- `src/neuro3d_completion/` is a separate, versioned package (see [API.md](API.md)). It never replaces `optlab` silently: the Blender add-on selects it only when a `numerical_config.json` sidecar is present, and `scripts/check_legacy_compatibility.py` checks that both agree in the periodic case.
+- The add-on bundles `__init__.py`, `core.py` and `bench_adapter.py` of the backend in `_vendor/neuro3d_completion` (NumPy only); `tests/test_vendor_sync_completion.py` keeps the copy identical.
+- Benchmarks are frozen by `benchmark select` (here run as shards by `scripts/completion_tools/select_sharded.py`) and evaluated once by `benchmark final`, which reserves TEST in a ledger before reading it and refuses to run if the package code or the data changed.
+- GPU work on the owner's workstation goes through a FIFO queue (`queue_driver.py`, one ticket per run); every record is written once and never overwritten.

@@ -1,5 +1,69 @@
 # Roadmap and evidence plan
 
+## Status update 2026-10-13 (completion protocol)
+
+This section supersedes the status lines of the 2026-10-10 roadmap below, which is kept unchanged as a historical record. Status values: **done** (committed evidence), **in progress** (registered and running or partly done), **pending (external / owner)** (needs hardware, an external party or the owner's accounts). Totals over the 51 audit items: 27 done, 21 in progress, 2 pending (external), 1 pending (owner).
+
+| ID | Status | Evidence or next action |
+|---|---|---|
+| G01 | in progress | RS references and operator-vs-RS done (CONTRATO-012); full-scale RS on trained masks running (CONTRATO-014) |
+| G02 | done | Window convergence measured; aperture/transparent/periodic compared (CONTRATO-010/011/012); padding 4 adequate for scores and labels only |
+| G03 | done | Tied-subpixel refinement 1-2-4-8-16, observed order 2.05, GCI (CONTRATO-012); historical T3 failure kept |
+| G04 | in progress | CONTRATO-015 (2D Maxwell, Meep 1.35.0) pre-registered and installed; waiting for WSL |
+| G05 | in progress | CONTRATO-013 (writer-disjoint MNIST, Fashion-MNIST, QMNIST50K) registered and running |
+| G06 | in progress | Paired statistics, Holm, crossed and writer-grouped bootstrap implemented; results pending |
+| G07 | in progress | Ten paired seeds for every model in CONTRATO-013; running |
+| G08 | in progress | Linear, MLP-12, MLP-128, CNN and parameter-matched quadratic model in CONTRATO-013; running |
+| G09 | pending (external) | No hardware or laboratory; analysis code and formats ready (hardware.py, example 4) |
+| G10 | done | Every new threshold justified in its contract before the run (CONTRATO-013/014/015) |
+| G11 | done | Independent-position finite differences, adjoint identities and autograd tests (tests/test_completion.py) |
+| G12 | done | phase_gradient filter evaluated against direct RS as an explicit variant (CONTRATO-012) |
+| G13 | in progress | CONTRATO-008 run archived; new runs keep weights, phases, predictions and logs |
+| G14 | in progress | CI on Linux Python 3.10/3.12/3.13; Windows CUDA lock committed; Linux CPU lock and Meep export pending |
+| G15 | in progress | Final runs save phases and checksums for every seed |
+| G16 | in progress | Contracts pushed before runs with hash manifests; external registry (OSF/Zenodo) needs the owner's account |
+| G17 | pending (external) | Third-party reproduction not yet requested |
+| G18 | in progress | docs/LITERATURE_REVIEW.md (sampling prior art); full comparison pending |
+| G19 | done | README updated with CONTRATO-010 to 015 and current limitations |
+| G-01 | in progress | New documentation in English; historical Spanish file names and coordination notes kept |
+| G-02 | done | scripts/audit_docs.py: no missing local links |
+| G-03 | pending (owner) | Public metadata is the owner's decision |
+| G-04 | done | No machine paths in new tools (NEURO3D_PYTHON, NEURO3D_GPUQ); historical scripts keep their documented paths |
+| G-05 | in progress | Licences and README updated; single status source = this section |
+| G-06 | done | Smoke run from a folder outside the repository; CI on Linux |
+| G-07 | in progress | CI runs tests, smoke run and uploads artifacts on three Python versions; Blender not in CI |
+| G-08 | in progress | Add-on 0.2.0; package version stays 0.1.0 until the closure gates |
+| G-11 | done | Extension validate and clean-profile install of 0.2.0 (evidence/blender-final) |
+| G-12 | done | Bundled neuro3d_completion with identity test (tests/test_vendor_sync_completion.py) |
+| G-13 | done | Self-test exits non-zero unless every step is PASS |
+| G-18 | done | Spectrum, window and quadrature measured jointly (CONTRATO-012) |
+| G-19 | done | Fresnel/TIR coefficients with evanescent amplitude (neuro3d_completion.interfaces, tests) |
+| G-20 | done | Shapes, labels, empty batches, NaN/inf and physical parameters validated (tests) |
+| G-21 | in progress | Per-model intervals and Holm implemented; results pending |
+| G-22 | in progress | CUDA lock committed; Meep environment export pending WSL; Blender version recorded |
+| G-23 | in progress | Per-sample predictions and dataset hashes saved by every final run |
+| G-24 | done | requirements-completion.txt; Torch not required inside Blender |
+| G-25 | done | docs/API.md; py.typed not offered (no full static typing) |
+| G-26 | done | examples/ (four runnable examples, tested) |
+| G-27 | in progress | CITATION and CHANGELOG updated; release with evidence archive and DOI pending |
+| C01 | in progress | Figures from the CONTRATO-013/014 results pending |
+| C02 | done | Blender bench declared illustrative and scaled |
+| C03 | done | Paraxial references are not called exact |
+| C04 | done | Header states the verified scope only |
+| C05 | done | Confirmatory, post hoc and exploratory labels kept |
+| C06 | done | Shell and PowerShell instructions in README |
+| C07 | done | Test counts from real runs: 33 historic, 98 total |
+| C08 | done | Python 3.10, 3.12, 3.13 checked in CI |
+| C10 | done | Blender designs, exports and displays; the core computes the field |
+| C11 | done | lambda = 0.75 mm (about 0.40 THz) declared |
+| C12 | in progress | Boundary and sampling quantified; retraining under the finite-support model running (CONTRATO-013/014) |
+
+Next actions: finish CONTRATO-013 and CONTRATO-014 on the shared GPU and record their results without changing thresholds; run CONTRATO-015 once WSL is restarted; secondary DEV analyses (robustness, detection noise, per-pixel influence) on the final masks; manuscript draft from the real summaries; external registration, DOI and replication with the owner.
+
+---
+
+## Historical status (2026-10-10)
+
 Status date: 2026-10-10. Checked against commit `a5c81fc`, with uncommitted working-tree changes noted where they affect a status.
 
 ## 1. Purpose
