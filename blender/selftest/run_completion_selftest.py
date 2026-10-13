@@ -65,10 +65,10 @@ def _():
 
 @step("bundled_backend")
 def _():
-    import neuro3d_completion
-    from neuro3d_completion import bench_adapter
+    from neuro3d_lab._vendor import neuro3d_completion
+    from neuro3d_lab._vendor.neuro3d_completion import bench_adapter
     origin = os.path.normpath(neuro3d_completion.__file__)
-    assert os.path.normpath(bench_io.VENDOR_DIR) in origin, origin
+    assert os.path.normpath(os.path.join(os.path.dirname(neuro3d_lab.__file__), "_vendor")) in origin, origin
     state["adapter"] = bench_adapter
 
 

@@ -40,7 +40,6 @@ import neuro3d_lab  # noqa: E402
 from neuro3d_lab import bench_io  # noqa: E402
 
 OUT = os.path.join(bench_io.out_root(), "selftest")
-OPTLAB_SRC = bench_io.OPTLAB_SRC
 
 
 @step("register")
@@ -48,7 +47,6 @@ def _():
     neuro3d_lab.register()
     assert hasattr(bpy.ops.optlab, "export_bench")
     assert bpy.context.scene.optlab_grid_n == N
-    assert os.path.isdir(OPTLAB_SRC), OPTLAB_SRC
 
 
 @step("build")
@@ -111,10 +109,7 @@ def _():
 
 @step("simulate")
 def _():
-    if not os.path.isfile(os.path.join(OPTLAB_SRC, "optlab", "bench.py")):
-        return "PENDIENTE"
-    sys.path.insert(0, OPTLAB_SRC)
-    from optlab.bench import simulate_bench
+    from neuro3d_lab._vendor.optlab.bench import simulate_bench
     out = np.asarray(simulate_bench(state["json"]))
     assert out.shape == (N, N) and np.isfinite(out).all(), out.shape
     np.save(os.path.join(OUT, "detector_intensity.npy"), out)
@@ -213,8 +208,7 @@ def _():
 def _():
     # hallazgo 10: un unico pixel marcado, comprobado contra los datos crudos de Blender
     # (sin usar los helpers de conversion para la comprobacion) y contra detector_masks.
-    sys.path.insert(0, OPTLAB_SRC)
-    from optlab.elements import detector_masks
+    from neuro3d_lab._vendor.optlab.elements import detector_masks
     bench_io.build_demo_bench(N, PIX, WL, (0.02, 0.04), 0.06, 0)
     i0, j0 = 3, 5  # fila desde ARRIBA, columna desde la izquierda
     a = np.zeros((N, N))

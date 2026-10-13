@@ -1,0 +1,22 @@
+{
+  "results": [
+    {
+      "check": "completion-selftest",
+      "exit_code": 0
+    },
+    {
+      "check": "build",
+      "exit_code": 0
+    },
+    {
+      "check": "install",
+      "exit_code": 0
+    },
+    {
+      "check": "installed-check",
+      "exit_code": 0
+    }
+  ],
+  "passed": true,
+  "zip_sha256": "f5937c54315ea1e1aba42acc0dd244679da00296e99bd3173aa49a412b6910d6"
+}

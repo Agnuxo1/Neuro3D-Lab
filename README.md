@@ -16,7 +16,7 @@
 
 ## Blender Extensions
 
-Version 0.1.1 of the add-on was submitted to the official Blender Extensions catalogue: [review status](https://extensions.blender.org/approval-queue/neuro3d-lab/). Version 0.2.0 (finite-support simulation path, see below) is built and checked in a clean Blender profile (`evidence/blender-final/`); its upload needs the owner's Blender ID and is pending. The listing link will replace this paragraph once the add-on is approved.
+Version 0.2.1 was uploaded to Blender Extensions on 2026-10-13 in response to the review of 0.1.1: [review status](https://extensions.blender.org/approval-queue/neuro3d-lab/), [version history](https://extensions.blender.org/add-ons/neuro3d-lab/versions/#v021). The extension now uses relative imports for both bundled backends and leaves `sys.path` unchanged. The website description and release notes are in English, with a Spanish summary. Clean-profile installation, both simulation paths and 100 repository tests pass (`evidence/blender-review-20261013/`). Approval is pending.
 
 ## Abstract
 

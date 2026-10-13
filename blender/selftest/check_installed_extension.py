@@ -11,6 +11,8 @@ produced by the repository self-test, compared to 1e-12). Prints INSTALLED_EXTEN
 import json
 import os
 import sys
+from types import ModuleType
+import importlib
 
 import addon_utils
 import bpy
@@ -22,8 +24,12 @@ MODULE = "bl_ext.user_default.neuro3d_lab"
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 assert not any("Neuro3D-Lab" in p for p in sys.path), "the repository must not be on sys.path"
+# Deliberately occupy global names: the extension must use its own bundled packages.
+sentinels = {name: ModuleType(name) for name in ("optlab", "neuro3d_completion")}
+sys.modules.update(sentinels)
 addon_utils.enable(MODULE, default_set=True)
 package = sys.modules[MODULE]
+path_before = tuple(sys.path)
 installed = os.path.dirname(os.path.abspath(package.__file__))
 print("INSTALLED_AT", installed)
 assert "Neuro3D-Lab" not in installed, installed
@@ -31,14 +37,13 @@ assert "Neuro3D-Lab" not in installed, installed
 os.makedirs(OUT, exist_ok=False)
 scene = bpy.context.scene
 scene.optlab_output_dir = OUT
-scene.optlab_src_path = os.path.join(OUT, "no_such_src")
+assert not hasattr(scene, "optlab_src_path")
 assert bpy.ops.optlab.build_demo_bench() == {"FINISHED"}
 assert bpy.ops.optlab.export_bench() == {"FINISHED"}
 assert bpy.ops.optlab.run_bench() == {"FINISHED"}
 legacy = np.load(os.path.join(OUT, "detector_intensity.npy"))
-import optlab  # noqa: E402
-import neuro3d_completion  # noqa: E402
-for module in (optlab, neuro3d_completion):
+for name in ("optlab", "neuro3d_completion"):
+    module = importlib.import_module(f"{MODULE}._vendor.{name}")
     origin = os.path.abspath(module.__file__)
     print("MODULE_ORIGIN", module.__name__, origin)
     assert origin.startswith(os.path.join(installed, "_vendor")), origin
@@ -52,5 +57,11 @@ assert bpy.ops.optlab.run_bench() == {"FINISHED"}
 provenance = json.load(open(os.path.join(os.path.dirname(scene.optlab_intensity_path), "provenance.json")))
 assert provenance["backend"] == "neuro3d_completion/v1", provenance
 print("FINITE_SUPPORT_SCORES", json.dumps(provenance["scores"]))
+assert tuple(sys.path) == path_before, "simulation changed sys.path"
+assert all(sys.modules[name] is sentinel for name, sentinel in sentinels.items())
+scene.optlab_intensity_path = os.path.join(os.path.dirname(scene.optlab_intensity_path), "detector_intensity.npy")
+assert bpy.ops.optlab.import_intensity() == {"FINISHED"}
 addon_utils.disable(MODULE, default_set=True)
+assert tuple(sys.path) == path_before, "unregister changed sys.path"
+print("SYS_PATH_UNCHANGED_AND_GLOBAL_MODULES_UNTOUCHED")
 print("INSTALLED_EXTENSION_OK")
