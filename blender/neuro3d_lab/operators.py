@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Operators, scene properties and N-panel for Neuro3D Lab."""
-import importlib
 import os
 
 import bpy
@@ -9,7 +8,7 @@ from bpy.props import FloatProperty, IntProperty, StringProperty
 
 from . import bench_io
 
-DEFAULT_OUT = os.path.join(bench_io.out_root(), "bench")  # $NEURO3D_LAB_OUT or <repo parent>/.cognition/neuro3d-lab
+DEFAULT_OUT = os.path.join(bench_io.out_root(), "bench")
 
 
 def _out_dir(scene):
@@ -73,35 +72,10 @@ class OPTLAB_OT_run_bench(bpy.types.Operator):
     bl_label = "Run Bench"
 
     def execute(self, context):
-        s = context.scene
-        src = bpy.path.abspath(s.optlab_src_path)
-        bench_io.prefer_optlab_path(src)  # bundled copy first; the UI folder is a fallback
-        try:
-            bench = importlib.import_module("optlab.bench")
-        except ImportError as exc:
-            self.report({"ERROR"}, f"optlab not importable (bundled copy or '{src}'): {exc}")
-            return {"CANCELLED"}
-        json_path = os.path.join(_out_dir(s), "bench.json")
-        if not os.path.isfile(json_path):
-            self.report({"ERROR"}, "bench.json not found; export the bench first")
-            return {"CANCELLED"}
-        try:
-            result = bench.simulate_bench(json_path)
-        except Exception as exc:
-            self.report({"ERROR"}, f"simulate_bench failed: {exc}")
-            return {"CANCELLED"}
-        if isinstance(result, np.ndarray):
-            out = os.path.join(_out_dir(s), "detector_intensity.npy")
-            np.save(out, result)
-            s.optlab_intensity_path = out
-        self.report({"INFO"}, "Simulation finished")
-        return {"FINISHED"}
+        return completion_operator.execute(self, context)
 
 
-# Versioned callback (completion guide, phase G): without numerical_config.json it calls
-# optlab.bench.simulate_bench exactly as before; with it, the finite-support backend.
 from . import completion_operator  # noqa: E402
-OPTLAB_OT_run_bench.execute = completion_operator.execute
 
 
 class OPTLAB_PT_panel(bpy.types.Panel):
@@ -121,7 +95,6 @@ class OPTLAB_PT_panel(bpy.types.Panel):
         col.separator()
         col.prop(s, "optlab_output_dir")
         col.operator("optlab.export_bench")
-        col.prop(s, "optlab_src_path")
         col.operator("optlab.run_bench")
         col.separator()
         col.prop(s, "optlab_intensity_path")
@@ -139,8 +112,6 @@ _PROPS = {
                                          min=1e-9, precision=9),
     "optlab_output_dir": StringProperty(name="Output dir", default=DEFAULT_OUT, subtype="DIR_PATH"),
     "optlab_intensity_path": StringProperty(name="Intensity .npy", default="", subtype="FILE_PATH"),
-    "optlab_src_path": StringProperty(name="optlab src path",
-                                      default=bench_io.OPTLAB_SRC, subtype="DIR_PATH"),
 }
 
 

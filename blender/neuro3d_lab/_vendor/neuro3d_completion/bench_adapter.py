@@ -26,7 +26,7 @@ def simulate_bench_v2(path, *, padding=4, refinement=1, boundary="aperture", fil
     The legacy entry point remains unchanged. This adapter is a separately
     versioned implementation and must be selected explicitly in Blender.
     """
-    from optlab.bench import load_bench
+    from ..optlab.bench import load_bench
     path = Path(path).resolve()
     bench, base = load_bench(path), path.parent
     n, pixel = bench["grid"]["n"], bench["grid"]["pixel_m"]

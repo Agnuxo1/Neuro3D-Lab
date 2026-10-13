@@ -2,7 +2,7 @@
 schema_version = "1.0.0"
 
 id = "neuro3d_lab"
-version = "0.2.0"
+version = "0.2.1"
 name = "Neuro3D Lab"
 tagline = "Virtual optical bench for diffractive optical neural networks"
 maintainer = "Francisco Angulo de Lafuente"

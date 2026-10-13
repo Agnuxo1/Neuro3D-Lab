@@ -1,0 +1,27 @@
+{
+  "results": [
+    {
+      "command": [
+        "D:\\TOOLS\\Blender\\blender-4.5.14-windows-x64\\blender.exe",
+        "-b",
+        "--factory-startup",
+        "-P",
+        "D:\\PROJECTS\\Neuro3D-Blender-Review-20261013\\blender\\selftest\\run_selftest.py"
+      ],
+      "exit_code": 0,
+      "accepted": true
+    },
+    {
+      "command": [
+        "D:\\TOOLS\\Blender\\blender-4.5.14-windows-x64\\blender.exe",
+        "--command",
+        "extension",
+        "validate",
+        "D:\\PROJECTS\\Neuro3D-Blender-Review-20261013\\blender\\neuro3d_lab"
+      ],
+      "exit_code": 0,
+      "accepted": true
+    }
+  ],
+  "passed": true
+}

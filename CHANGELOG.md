@@ -2,6 +2,12 @@
 
 All notable changes. Dates are UTC+2. Historical records are never rewritten; corrections are added as new entries or addenda.
 
+## [0.2.1] — 2026-10-13
+- Blender Extensions review fix: relative imports for both bundled libraries, no `sys.path` changes, no external source-path option, and writable user-data output defaults.
+- Bundled completion adapter changes only its import of `load_bench`; source numerical code remains unchanged. The vendor identity test explicitly checks this one permitted adaptation.
+- Added namespace/collision regression tests and a clean-profile installed-package check that asserts unchanged paths and untouched global module names.
+- Uploaded to Blender Extensions with English description and release notes; approval pending. Evidence: `evidence/blender-review-20261013/` (100 pytest tests; Blender 4.5.14 LTS: 15/15 legacy, 8/8 completion, validation/build/install).
+
 ## [Unreleased] — completion protocol (2026-10-12 to 2026-10-13)
 
 ### Added
