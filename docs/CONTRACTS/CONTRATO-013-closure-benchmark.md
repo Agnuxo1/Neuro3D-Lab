@@ -100,7 +100,8 @@ About 16 GPU-hours per dataset for the optical runs at 0.002 s per sample, run t
 
 ## 8. Registration
 
-- Pre-registration commit: to be recorded after the commit and push.
+- Pre-registration commit: `9521a9bfd30a400479015ff3b70ba9454a314131` (2026-10-13), pushed to `origin/completion/2026-10-12` before any run of this contract; hash manifests in `evidence/protocol-manifest-*.json` (commit b7f8202).
+- External registry (OSF or Zenodo): pending; it needs the owner's account.
 
 ## 9. Results
 
