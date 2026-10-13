@@ -1,0 +1,42 @@
+{
+  "padding_2_4_8": {
+    "field_relative_L2": {
+      "status": "monotone",
+      "order": 2.389223722998197,
+      "remaining_estimate": 0.006176642020300426,
+      "gci": 0.007720802525375532
+    },
+    "intensity_relative_L2": {
+      "status": "monotone",
+      "order": 2.3579020458537063,
+      "remaining_estimate": 0.004585724779896075,
+      "gci": 0.005732155974870093
+    },
+    "score_relative_L2": {
+      "status": "monotone",
+      "order": 3.447236306930267,
+      "remaining_estimate": 0.00012192037670095161,
+      "gci": 0.0001524004708761895
+    }
+  },
+  "padding_4_8_16": {
+    "field_relative_L2": {
+      "status": "monotone",
+      "order": 2.095272683960802,
+      "remaining_estimate": 0.0018719555435989846,
+      "gci": 0.002339944429498731
+    },
+    "intensity_relative_L2": {
+      "status": "monotone",
+      "order": 2.125075498044309,
+      "remaining_estimate": 0.0012900905489530703,
+      "gci": 0.0016126131861913381
+    },
+    "score_relative_L2": {
+      "status": "monotone",
+      "order": 2.1555256689696707,
+      "remaining_estimate": 7.846418553680167e-05,
+      "gci": 9.808023192100209e-05
+    }
+  }
+}

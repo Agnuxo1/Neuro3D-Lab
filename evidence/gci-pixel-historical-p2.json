@@ -1,0 +1,42 @@
+{
+  "refinement_1_2_4": {
+    "field_relative_L2": {
+      "status": "monotone",
+      "order": 2.9237932762837504,
+      "remaining_estimate": 0.02544253520017152,
+      "gci": 0.0318031690002144
+    },
+    "intensity_relative_L2": {
+      "status": "monotone",
+      "order": 3.3607889991909805,
+      "remaining_estimate": 0.03123565564680273,
+      "gci": 0.03904456955850341
+    },
+    "scores_relative_L2": {
+      "status": "monotone",
+      "order": 3.2729897713058906,
+      "remaining_estimate": 0.03220223988242089,
+      "gci": 0.04025279985302611
+    }
+  },
+  "refinement_2_4_8": {
+    "field_relative_L2": {
+      "status": "monotone",
+      "order": 2.163107904311458,
+      "remaining_estimate": 0.010758490730928438,
+      "gci": 0.013448113413660548
+    },
+    "intensity_relative_L2": {
+      "status": "monotone",
+      "order": 2.227964987787765,
+      "remaining_estimate": 0.016779630524987724,
+      "gci": 0.020974538156234655
+    },
+    "scores_relative_L2": {
+      "status": "monotone",
+      "order": 2.2180582864667837,
+      "remaining_estimate": 0.016421629048745466,
+      "gci": 0.02052703631093183
+    }
+  }
+}

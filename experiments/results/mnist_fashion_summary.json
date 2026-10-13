@@ -1,0 +1,345 @@
+{
+ "contract": "CONTRATO-008",
+ "caveat": "All D2NN numbers use the periodic FFT window (51.2 mm at dx = 0.4 mm; CONTRATO-006c). The periodic-window caveat (CONTRATO-010, pending) applies to every D2NN number here.",
+ "intervals": "Wilson 95 % per seed and model (n = 10,000). No binomial interval for seed means (CONTRATO-003 note 4).",
+ "datasets": {
+  "mnist": {
+   "d2nn": {
+    "selected": {
+     "beta": 100.0,
+     "lr": 0.02,
+     "dev_acc": 0.9157,
+     "edge": {
+      "beta": true,
+      "lr": true,
+      "any": true
+     }
+    },
+    "params": 49152,
+    "seeds": [
+     {
+      "seed": 0,
+      "dev_acc_final": 0.9386,
+      "test_acc": 0.9321,
+      "test_wilson95": [
+       0.9270013685791271,
+       0.9368667678375872
+      ]
+     },
+     {
+      "seed": 1,
+      "dev_acc_final": 0.9407,
+      "test_acc": 0.9332,
+      "test_wilson95": [
+       0.9281381221865116,
+       0.9379291694027515
+      ]
+     },
+     {
+      "seed": 2,
+      "dev_acc_final": 0.9405,
+      "test_acc": 0.9348,
+      "test_wilson95": [
+       0.9297922628748584,
+       0.9394737998744757
+      ]
+     }
+    ],
+    "test_acc_across_seeds": {
+     "n": 3,
+     "mean": 0.9333666666666667,
+     "sd_sample": 0.0013576941236277142
+    }
+   },
+   "baselines": {
+    "logreg": {
+     "params": 40970,
+     "seeds": [
+      {
+       "seed": 0,
+       "dev_acc_final": 0.932,
+       "test_acc": 0.9276,
+       "test_wilson95": [
+        0.9223547958697432,
+        0.9325167966592708
+       ]
+      }
+     ],
+     "test_acc_across_seeds": {
+      "n": 1,
+      "mean": 0.9276,
+      "sd_sample": null
+     }
+    },
+    "mlp12": {
+     "params": 49294,
+     "seeds": [
+      {
+       "seed": 0,
+       "dev_acc_final": 0.9422,
+       "test_acc": 0.9341,
+       "test_wilson95": [
+        0.9290684756351676,
+        0.9387981247316356
+       ]
+      }
+     ],
+     "test_acc_across_seeds": {
+      "n": 1,
+      "mean": 0.9341,
+      "sd_sample": null
+     }
+    },
+    "mlp128": {
+     "params": 525706,
+     "seeds": [
+      {
+       "seed": 0,
+       "dev_acc_final": 0.9785,
+       "test_acc": 0.9766,
+       "test_wilson95": [
+        0.9734489637240975,
+        0.9793849955820955
+       ]
+      }
+     ],
+     "test_acc_across_seeds": {
+      "n": 1,
+      "mean": 0.9766,
+      "sd_sample": null
+     }
+    },
+    "cnn": {
+     "params": 42218,
+     "seeds": [
+      {
+       "seed": 0,
+       "dev_acc_final": 0.9791,
+       "test_acc": 0.9791,
+       "test_wilson95": [
+        0.9761067547581996,
+        0.9817252844856044
+       ]
+      }
+     ],
+     "test_acc_across_seeds": {
+      "n": 1,
+      "mean": 0.9791,
+      "sd_sample": null
+     }
+    }
+   },
+   "mcnemar_seed0_TEST": {
+    "status": "complete",
+    "comparisons": {
+     "logreg": {
+      "b_d2nn_only_correct": 212,
+      "c_baseline_only_correct": 167,
+      "p_raw": 0.02368636944450971,
+      "acc_d2nn_seed0": 0.9321,
+      "acc_baseline_seed0": 0.9276,
+      "p_holm": 0.04737273888901942,
+      "verdict": "D2NN beats baseline"
+     },
+     "mlp12": {
+      "b_d2nn_only_correct": 230,
+      "c_baseline_only_correct": 250,
+      "p_raw": 0.38583812402222656,
+      "acc_d2nn_seed0": 0.9321,
+      "acc_baseline_seed0": 0.9341,
+      "p_holm": 0.38583812402222656,
+      "verdict": "D2NN does not beat baseline"
+     },
+     "mlp128": {
+      "b_d2nn_only_correct": 77,
+      "c_baseline_only_correct": 522,
+      "p_raw": 3.4275230168856213e-82,
+      "acc_d2nn_seed0": 0.9321,
+      "acc_baseline_seed0": 0.9766,
+      "p_holm": 1.0282569050656863e-81,
+      "verdict": "D2NN does not beat baseline"
+     },
+     "cnn": {
+      "b_d2nn_only_correct": 68,
+      "c_baseline_only_correct": 538,
+      "p_raw": 1.1276456316068332e-91,
+      "acc_d2nn_seed0": 0.9321,
+      "acc_baseline_seed0": 0.9791,
+      "p_holm": 4.5105825264273326e-91,
+      "verdict": "D2NN does not beat baseline"
+     }
+    }
+   },
+   "c1": null
+  },
+  "fashion": {
+   "d2nn": {
+    "selected": {
+     "beta": 100.0,
+     "lr": 0.02,
+     "dev_acc": 0.8119,
+     "edge": {
+      "beta": true,
+      "lr": true,
+      "any": true
+     }
+    },
+    "params": 49152,
+    "seeds": [
+     {
+      "seed": 0,
+      "dev_acc_final": 0.826,
+      "test_acc": 0.8188,
+      "test_wilson95": [
+       0.8111284313235704,
+       0.8262267223206056
+      ]
+     },
+     {
+      "seed": 1,
+      "dev_acc_final": 0.8378,
+      "test_acc": 0.8274,
+      "test_wilson95": [
+       0.8198677679151141,
+       0.8346807807144443
+      ]
+     },
+     {
+      "seed": 2,
+      "dev_acc_final": 0.8343,
+      "test_acc": 0.8291,
+      "test_wilson95": [
+       0.821596093147201,
+       0.8363511498399329
+      ]
+     }
+    ],
+    "test_acc_across_seeds": {
+     "n": 3,
+     "mean": 0.8251,
+     "sd_sample": 0.005521775076911411
+    }
+   },
+   "baselines": {
+    "logreg": {
+     "params": 40970,
+     "seeds": [
+      {
+       "seed": 0,
+       "dev_acc_final": 0.8518,
+       "test_acc": 0.8387,
+       "test_wilson95": [
+        0.8313611200939179,
+        0.8457787498536429
+       ]
+      }
+     ],
+     "test_acc_across_seeds": {
+      "n": 1,
+      "mean": 0.8387,
+      "sd_sample": null
+     }
+    },
+    "mlp12": {
+     "params": 49294,
+     "seeds": [
+      {
+       "seed": 0,
+       "dev_acc_final": 0.8512,
+       "test_acc": 0.8413,
+       "test_wilson95": [
+        0.8340073488241776,
+        0.848330524258499
+       ]
+      }
+     ],
+     "test_acc_across_seeds": {
+      "n": 1,
+      "mean": 0.8413,
+      "sd_sample": null
+     }
+    },
+    "mlp128": {
+     "params": 525706,
+     "seeds": [
+      {
+       "seed": 0,
+       "dev_acc_final": 0.8825,
+       "test_acc": 0.8761,
+       "test_wilson95": [
+        0.8694976360081,
+        0.882413509806124
+       ]
+      }
+     ],
+     "test_acc_across_seeds": {
+      "n": 1,
+      "mean": 0.8761,
+      "sd_sample": null
+     }
+    },
+    "cnn": {
+     "params": 42218,
+     "seeds": [
+      {
+       "seed": 0,
+       "dev_acc_final": 0.8996,
+       "test_acc": 0.8916,
+       "test_wilson95": [
+        0.8853555904496782,
+        0.897543650977735
+       ]
+      }
+     ],
+     "test_acc_across_seeds": {
+      "n": 1,
+      "mean": 0.8916,
+      "sd_sample": null
+     }
+    }
+   },
+   "mcnemar_seed0_TEST": {
+    "status": "complete",
+    "comparisons": {
+     "logreg": {
+      "b_d2nn_only_correct": 256,
+      "c_baseline_only_correct": 455,
+      "p_raw": 7.775181105345609e-14,
+      "acc_d2nn_seed0": 0.8188,
+      "acc_baseline_seed0": 0.8387,
+      "p_holm": 7.775181105345609e-14,
+      "verdict": "D2NN does not beat baseline"
+     },
+     "mlp12": {
+      "b_d2nn_only_correct": 286,
+      "c_baseline_only_correct": 511,
+      "p_raw": 1.3780191850904366e-15,
+      "acc_d2nn_seed0": 0.8188,
+      "acc_baseline_seed0": 0.8413,
+      "p_holm": 2.756038370180873e-15,
+      "verdict": "D2NN does not beat baseline"
+     },
+     "mlp128": {
+      "b_d2nn_only_correct": 257,
+      "c_baseline_only_correct": 830,
+      "p_raw": 7.761176635638566e-71,
+      "acc_d2nn_seed0": 0.8188,
+      "acc_baseline_seed0": 0.8761,
+      "p_holm": 2.3283529906915697e-70,
+      "verdict": "D2NN does not beat baseline"
+     },
+     "cnn": {
+      "b_d2nn_only_correct": 246,
+      "c_baseline_only_correct": 974,
+      "p_raw": 9.061157476713101e-103,
+      "acc_d2nn_seed0": 0.8188,
+      "acc_baseline_seed0": 0.8916,
+      "p_holm": 3.6244629906852405e-102,
+      "verdict": "D2NN does not beat baseline"
+     }
+    }
+   },
+   "c1": null
+  }
+ }
+}

@@ -1,0 +1,5 @@
+# Byte-identical sources on every platform: frozen protocols hash these files.
+src/neuro3d_completion/*.py text eol=lf
+completion-configs/*.json text eol=lf
+evidence/** -text
+blender/neuro3d_lab/_vendor/neuro3d_completion/*.py text eol=lf

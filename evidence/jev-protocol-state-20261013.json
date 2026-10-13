@@ -1,0 +1,17 @@
+{"objective": "Close the Neuro3D-Lab scalar-simulation research per the completion guide: choose a computationally viable, scientifically defensible protocol for the large benchmarks (MNIST writer-disjoint + Fashion-MNIST, 9 models x 10 seeds) and the discretisation-fidelity question, register it before any TEST use, then run it on one shared RTX 3090.",
+ "facts": [
+  "Measured RTX 3090 FP64 training cost per sample: m=512 (padding 4, refinement 1) 0.0020 s; m=1024 (p2 r4 or p4 r2) 0.0076 s; m=2048 (p2 r8 or p4 r4) 0.032 s [evidence/gpu-probe-rtx3090.json]",
+  "Full guide protocol per dataset (6-config selection + 20 trained final runs, 20 epochs x 50k): about 16 GPU-hours at m=512, 60 h at m=1024, 250 h at m=2048",
+  "Window convergence at refinement 1 with historical masks: padding 4 vs 8 changes scores 0.12 %, 8 vs 16 0.03 %; field 2.6 % and 0.6 %",
+  "Refinement (tied subpixels) with historical masks at padding 2: r1 vs r2 scores 270 %, r2 vs r4 28 %, r4 vs r8 6 %; observed order 2.2; GCI at r8 about 2 %",
+  "Small-scale direct Rayleigh-Sommerfeld of a pixelated screen: refinement-1 model differs 44-52 % in scores; refinement 3 with large window converges to RS within 3.5 %",
+  "CUDA deterministic mode works for all models; NumPy/Torch equivalence gate passes on CUDA (gradient 1.3e-15)",
+  "MNIST and Fashion official TEST10K were already examined by the unpublished CONTRATO-008 run (periodic model, 3 seeds); QMNIST50K is the only fresh test (MNIST only)",
+  "GPU is shared with other projects; RAM about 5 GB free"],
+ "constraints": ["no threshold changes after seeing results", "TEST only after freezing", "honest scope: no device claims without hardware", "publish everything to GitHub without deleting history"],
+ "options_considered": [
+  "A: primary benchmark at padding 4, refinement 1 (declared sampled band-limited model, not a pixelated device), full guide budget, about 32 GPU-hours, plus a separate reduced-budget fidelity study training and cross-evaluating at refinements 1,2,4,8 on DEV only",
+  "B: primary benchmark at padding 2, refinement 4 with the full budget, about 120 GPU-hours, still not converged in refinement or window",
+  "C: primary benchmark at padding 4, refinement 1 with a reduced budget (10 epochs, 4-config grid), about 16 GPU-hours, plus the fidelity study",
+  "D: skip large benchmarks; only diagnostics and documentation"],
+ "observed_failures": ["CONTRATO-010/011: periodic window convention materially changes historical DEV accuracy"]}

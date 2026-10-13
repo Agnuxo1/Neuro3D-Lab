@@ -30,3 +30,4 @@ runs/
 Thumbs.db
 desktop.ini
 .DS_Store
+evidence/blender-final/selftest/*.blend
