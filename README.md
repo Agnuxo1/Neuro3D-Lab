@@ -3,6 +3,7 @@
 </p>
 
 <p align="center">
+  <a href="https://extensions.blender.org/add-ons/neuro3d-lab/"><img alt="Blender Extensions: approved" src="https://img.shields.io/badge/Blender%20Extensions-Approved-e87d0d?logo=blender&amp;logoColor=white"></a>
   <a href="LICENSE"><img alt="Core licence: Apache-2.0" src="https://img.shields.io/badge/core%20licence-Apache--2.0-22d3ee"></a>
   <a href="blender/neuro3d_lab/LICENSE"><img alt="Blender add-on licence: GPL-3.0-or-later" src="https://img.shields.io/badge/add--on%20licence-GPL--3.0--or--later-a78bfa"></a>
   <img alt="Blender 4.5.14" src="https://img.shields.io/badge/Blender-4.5.14-fbbf24">
@@ -16,7 +17,7 @@
 
 ## Blender Extensions
 
-Version 0.1.1 of the add-on was submitted to the official Blender Extensions catalogue: [review status](https://extensions.blender.org/approval-queue/neuro3d-lab/). Version 0.2.0 (finite-support simulation path, see below) is built and checked in a clean Blender profile (`evidence/blender-final/`); its upload needs the owner's Blender ID and is pending. The listing link will replace this paragraph once the add-on is approved.
+**Neuro3D Lab is approved and available in the official Blender Extensions catalogue.** [Get the Blender add-on](https://extensions.blender.org/add-ons/neuro3d-lab/) · [Version history](https://extensions.blender.org/add-ons/neuro3d-lab/versions/). Approved on 14 October 2026; [approval record](https://extensions.blender.org/approval-queue/neuro3d-lab/#activity-23202).
 
 ## Abstract
 
