@@ -15,6 +15,10 @@
 
 ---
 
+<!-- impact-note:start -->
+<sub><strong>Efficiency and practical value.</strong> Neuro3D-Lab separates optical geometry, numerical sampling and FFT boundaries so simulation assumptions can be checked independently. Its reusable NumPy, Torch and Blender components make controlled optical experiments easier to construct and compare. The <a href="#scientific-method-contracts-and-verdicts">registered contracts and published failures</a> help identify numerical artifacts before further training or fabrication work, improving research decisions without treating simulation as measured device efficiency.</sub>
+<!-- impact-note:end -->
+
 ## Blender Extensions
 
 **Neuro3D Lab is approved and available in the official Blender Extensions catalogue.** [Get the Blender add-on](https://extensions.blender.org/add-ons/neuro3d-lab/) · [Version history](https://extensions.blender.org/add-ons/neuro3d-lab/versions/). Approved on 14 October 2026; [approval record](https://extensions.blender.org/approval-queue/neuro3d-lab/#activity-23202).
